@@ -20,9 +20,31 @@
     <section class="intro-card" id="introStep">
       <span class="eyebrow">COMMENCER SUR NEXORA</span>
       <h1>Créons votre profil<br><span>en quelques minutes.</span></h1>
-      <p>Répondez à quelques questions. Nexora utilisera vos réponses pour personnaliser votre profil et vos futures opportunités.</p>
+      <p>Créez votre compte pour sauvegarder votre profil, vos préférences et retrouver votre espace Nexora sur cet appareil.</p>
       <div class="intro-points"><span>✓ Profil professionnel</span><span>✓ Matching personnalisé</span><span>✓ Version gratuite illimitée</span></div>
-      <button class="primary-button" id="startButton">Créer mon profil →</button>
+      <button class="primary-button" id="startButton">Créer mon compte →</button>
+    </section>
+
+    <section class="account-card hidden" id="accountCard">
+      <div class="account-header">
+        <span class="eyebrow">VOTRE COMPTE</span>
+        <span class="account-badge">Prototype · mode démo</span>
+      </div>
+      <h2>Gardez votre profil Nexora avec vous.</h2>
+      <p class="account-note">Dans cette version, les boutons Google et Apple simulent la connexion. La vraie authentification OAuth sera branchée ensuite avec les identifiants officiels.</p>
+      <div class="social-grid">
+        <button class="social-button" id="googleButton"><span class="social-icon google">G</span>Continuer avec Google</button>
+        <button class="social-button" id="appleButton"><span class="social-icon apple"></span>Continuer avec Apple</button>
+      </div>
+      <div class="divider"><span>ou avec votre email</span></div>
+      <form id="accountForm" class="account-form">
+        <label>Nom complet<input id="nameInput" name="name" autocomplete="name" required placeholder="Votre nom" /></label>
+        <label>Email<input id="emailInput" name="email" type="email" autocomplete="email" required placeholder="vous@exemple.com" /></label>
+        <label>Mot de passe<input id="passwordInput" name="password" type="password" autocomplete="new-password" minlength="6" required placeholder="6 caractères minimum" /></label>
+        <label class="check-row"><input id="termsInput" type="checkbox" required /><span>J'accepte les conditions d'utilisation de Nexora.</span></label>
+        <button class="primary-button" type="submit">Créer mon compte et commencer le quiz →</button>
+      </form>
+      <div class="payment-note"><strong>💳 Paiements</strong><span>Votre compte servira ensuite à rattacher vos abonnements et moyens de paiement via un prestataire sécurisé. Nexora ne stockera pas directement les données complètes de votre carte.</span></div>
     </section>
 
     <section class="quiz-card hidden" id="quizCard">
@@ -47,7 +69,7 @@
       </div>
       <div class="result-details" id="resultDetails"></div>
       <div class="result-actions"><button class="primary-button" id="openDashboard">Accéder à mon dashboard →</button><a class="secondary-button" href="index.html">Retour à Nexora</a></div>
-      <p class="demo-disclaimer">Prototype : les données sont enregistrées uniquement dans ce navigateur pour la démonstration.</p>
+      <p class="demo-disclaimer">Prototype : les données de compte et de profil sont conservées localement pour la démonstration.</p>
     </section>
   </main>
   <script src="onboarding.js"></script>
