@@ -11,10 +11,13 @@ const questions = [
 
 const state={step:0,answers:{}};
 const introStep=document.getElementById('introStep');
+const demoCard=document.getElementById('demoCard');
 const accountCard=document.getElementById('accountCard');
 const quizCard=document.getElementById('quizCard');
 const resultCard=document.getElementById('resultCard');
 const startButton=document.getElementById('startButton');
+const createAccountFromDemo=document.getElementById('createAccountFromDemo');
+const backToDemo=document.getElementById('backToDemo');
 const accountForm=document.getElementById('accountForm');
 const nextButton=document.getElementById('nextButton');
 const backButton=document.getElementById('backButton');
@@ -26,34 +29,33 @@ const questionNote=document.getElementById('questionNote');
 const optionsWrap=document.getElementById('options');
 
 const saveAccount=(account)=>localStorage.setItem('nexoraAccount',JSON.stringify(account));
-const accountExists=()=>Boolean(localStorage.getItem('nexoraAccount'));
 
-startButton.addEventListener('click',()=>{
-  introStep.classList.add('hidden');
-  accountCard.classList.remove('hidden');
-});
+function showCard(card){
+  [introStep,demoCard,accountCard,quizCard,resultCard].forEach((el)=>el?.classList.add('hidden'));
+  card?.classList.remove('hidden');
+}
+
+startButton?.addEventListener('click',()=>showCard(demoCard));
+backToDemo?.addEventListener('click',()=>showCard(demoCard));
+createAccountFromDemo?.addEventListener('click',()=>showCard(accountCard));
 
 accountForm?.addEventListener('submit',(event)=>{
   event.preventDefault();
-  const account={name:document.getElementById('nameInput').value.trim(),email:document.getElementById('emailInput').value.trim(),provider:'email',createdAt:new Date().toISOString()};
+  const account={name:document.getElementById('nameInput').value.trim(),email:document.getElementById('emailInput').value.trim(),provider:'email',createdAt:new Date().toISOString(),plan:'free'};
   saveAccount(account);
   openQuiz();
 });
 
 function finishSocial(provider){
   const defaultName=provider==='Google'?'Google User':'Apple User';
-  saveAccount({name:defaultName,email:`demo-${provider.toLowerCase()}@nexora.local`,provider:provider.toLowerCase(),createdAt:new Date().toISOString(),demo:true});
+  saveAccount({name:defaultName,email:`demo-${provider.toLowerCase()}@nexora.local`,provider:provider.toLowerCase(),createdAt:new Date().toISOString(),demo:true,plan:'free'});
   openQuiz();
 }
 
 document.getElementById('googleButton')?.addEventListener('click',()=>finishSocial('Google'));
 document.getElementById('appleButton')?.addEventListener('click',()=>finishSocial('Apple'));
 
-function openQuiz(){
-  accountCard.classList.add('hidden');
-  quizCard.classList.remove('hidden');
-  renderQuestion();
-}
+function openQuiz(){showCard(quizCard);renderQuestion();}
 
 const renderQuestion=()=>{
   const q=questions[state.step];
@@ -78,9 +80,8 @@ const renderQuestion=()=>{
   nextButton.textContent=state.step===questions.length-1?'Créer mon profil →':'Continuer →';
 };
 
-backButton.addEventListener('click',()=>{if(state.step>0){state.step-=1;renderQuestion();}});
-
-nextButton.addEventListener('click',()=>{
+backButton?.addEventListener('click',()=>{if(state.step>0){state.step-=1;renderQuestion();}});
+nextButton?.addEventListener('click',()=>{
   const q=questions[state.step];
   if(!state.answers[q.key]){
     nextButton.textContent='Choisissez une réponse';
@@ -94,9 +95,7 @@ nextButton.addEventListener('click',()=>{
 function finishProfile(){
   localStorage.setItem('nexoraProfile',JSON.stringify(state.answers));
   const account=JSON.parse(localStorage.getItem('nexoraAccount')||'{}');
-  localStorage.setItem('nexoraAccount',JSON.stringify({...account,profileComplete:true}));
-  quizCard.classList.add('hidden');
-  resultCard.classList.remove('hidden');
+  localStorage.setItem('nexoraAccount',JSON.stringify({...account,profileComplete:true,plan:'free'}));
   const role=state.answers.role||'Professionnel';
   const zone=state.answers.zone||'International';
   document.getElementById('resultRole').textContent=role;
@@ -110,7 +109,8 @@ function finishProfile(){
     <div class="detail-card"><small>Secteur</small><strong>${state.answers.sector||'À définir'}</strong></div>
     <div class="detail-card"><small>Clients recherchés</small><strong>${state.answers.clients||'À définir'}</strong></div>
     <div class="detail-card"><small>Objectif</small><strong>${state.answers.goal||'À définir'}</strong></div>
-    <div class="detail-card" style="grid-column:1/-1"><small>Préférences</small><div class="chip-row"><span class="chip">${state.answers.skills||'À définir'}</span><span class="chip">${zone}</span><span class="chip">${state.answers.availability||'Flexible'}</span></div></div>`;
+    <div class="detail-card" style="grid-column:1/-1"><small>Préférences</small><div class="chip-row"><span class="chip">${state.answers.skills||'À définir'}</span><span class="chip">${zone}</span><span class="chip">${state.answers.availability||'Flexible'}</span><span class="chip">Version gratuite</span></div></div>`;
+  showCard(resultCard);
 }
 
-document.getElementById('openDashboard').addEventListener('click',()=>{window.location.href='index.html#dashboard';});
+document.getElementById('openDashboard')?.addEventListener('click',()=>{window.location.href='index.html#dashboard';});
