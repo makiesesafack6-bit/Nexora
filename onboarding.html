@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0d10" />
+  <title>Nexora — Créer mon profil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+  <header class="onboarding-header">
+    <a class="brand" href="index.html"><span class="brand-mark">N</span><span>Nexora</span></a>
+    <span class="header-note">Profil gratuit · sans pièces</span>
+  </header>
+
+  <main class="onboarding-shell">
+    <section class="intro-card" id="introStep">
+      <span class="eyebrow">COMMENCER SUR NEXORA</span>
+      <h1>Créons votre profil<br><span>en quelques minutes.</span></h1>
+      <p>Répondez à quelques questions. Nexora utilisera vos réponses pour personnaliser votre profil et vos futures opportunités.</p>
+      <div class="intro-points"><span>✓ Profil professionnel</span><span>✓ Matching personnalisé</span><span>✓ Version gratuite illimitée</span></div>
+      <button class="primary-button" id="startButton">Créer mon profil →</button>
+    </section>
+
+    <section class="quiz-card hidden" id="quizCard">
+      <div class="quiz-top"><div><span class="eyebrow">QUIZ NEXORA</span><strong id="stepLabel">Étape 1 sur 8</strong></div><span id="percentLabel">13%</span></div>
+      <div class="progress"><span id="progressBar"></span></div>
+      <div class="question-area">
+        <h2 id="questionTitle"></h2>
+        <p id="questionNote"></p>
+        <div class="options" id="options"></div>
+      </div>
+      <div class="quiz-actions"><button class="back-button" id="backButton">← Retour</button><button class="primary-button" id="nextButton">Continuer →</button></div>
+    </section>
+
+    <section class="result-card hidden" id="resultCard">
+      <div class="result-glow"></div>
+      <span class="eyebrow">PROFIL NEXORA PRÊT</span>
+      <h2 id="resultTitle">Votre profil est prêt.</h2>
+      <p class="result-subtitle">Voici la première compréhension que Nexora a construite à partir de vos réponses.</p>
+      <div class="result-grid">
+        <div class="result-main"><div class="result-avatar" id="resultAvatar">S</div><div><h3 id="resultRole">Profil professionnel</h3><span id="resultZone">International</span></div></div>
+        <div class="result-score"><span>Profil complété</span><strong>100%</strong></div>
+      </div>
+      <div class="result-details" id="resultDetails"></div>
+      <div class="result-actions"><button class="primary-button" id="openDashboard">Accéder à mon dashboard →</button><a class="secondary-button" href="index.html">Retour à Nexora</a></div>
+      <p class="demo-disclaimer">Prototype : les données sont enregistrées uniquement dans ce navigateur pour la démonstration.</p>
+    </section>
+  </main>
+  <script src="onboarding.js"></script>
+</body>
+</html>
