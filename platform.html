@@ -1,5 +1,76 @@
 <!doctype html>
 <html lang="fr">
-<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/><title>Nexora — Votre espace</title><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/><link rel="stylesheet" href="styles.css"/><style>.app-shell{min-height:100vh;background:#f7f7f5}.app-header{height:74px;display:flex;align-items:center;justify-content:space-between;padding:0 5vw;border-bottom:1px solid #e2e4e6;background:rgba(247,247,245,.88);backdrop-filter:blur(18px);position:sticky;top:0;z-index:20}.app-nav{display:flex;gap:24px}.app-nav a{color:#737980;text-decoration:none;font-size:12px;font-weight:700}.app-nav a.active,.app-nav a:hover{color:#111318}.app-user{display:flex;align-items:center;gap:9px;font-size:11px}.app-user span{width:34px;height:34px;border-radius:50%;background:#111318;color:#fff;display:grid;place-items:center;font-weight:800}.platform-main{width:min(1180px,90vw);margin:0 auto;padding:54px 0}.welcome{display:flex;justify-content:space-between;gap:30px;align-items:flex-end}.welcome small{color:#8c9298;font-size:11px}.welcome h1{font:800 clamp(38px,5vw,62px)/1 'Manrope';letter-spacing:-.06em;margin:6px 0 12px}.welcome p{color:#737a81;font-size:13px;max-width:620px}.profile-summary{background:#111318;color:#fff;border-radius:24px;padding:25px;margin:32px 0;display:flex;justify-content:space-between;gap:20px;align-items:center}.profile-left{display:flex;align-items:center;gap:15px}.profile-big{width:58px;height:58px;border-radius:18px;background:#2b2f36;display:grid;place-items:center;font:800 21px 'Manrope'}.profile-summary small{display:block;color:#aeb3b9;font-size:10px}.profile-summary strong{display:block;font:700 18px 'Manrope';margin-top:2px}.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.chips span{padding:6px 8px;border-radius:99px;background:#23272d;color:#dce0e4;font-size:9px}.match-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.match-card{background:#fff;border:1px solid #e0e2e4;border-radius:21px;padding:22px;box-shadow:0 12px 34px rgba(16,18,22,.04)}.match-head{display:flex;justify-content:space-between;gap:10px}.match-type{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#8d939a;font-weight:800}.score{font-size:10px;font-weight:800;background:#eef0f1;border-radius:99px;padding:6px 8px}.match-card h3{font:700 20px/1.12 'Manrope';letter-spacing:-.045em;margin:23px 0 9px}.match-card p{color:#7a8188;font-size:11px;line-height:1.7}.match-meta{margin-top:19px;display:flex;flex-wrap:wrap;gap:7px;color:#8b9198;font-size:9px}.match-button{margin-top:18px;border:0;background:none;font:800 11px 'DM Sans';cursor:pointer;padding:0}.section-title{display:flex;justify-content:space-between;align-items:end;margin:60px 0 22px}.section-title h2{font:800 34px/1 'Manrope';letter-spacing:-.05em}.section-title span{font-size:10px;color:#8d939a}.empty-note{border:1px dashed #d5d8db;border-radius:18px;padding:22px;color:#858b92;font-size:11px;background:#fbfbfa}@media(max-width:800px){.app-nav{display:none}.welcome{display:block}.profile-summary{align-items:flex-start;flex-direction:column}.match-grid{grid-template-columns:1fr}.platform-main{padding-top:35px}}
-</style></head>
-<body><div class="app-shell"><header class="app-header"><a class="brand" href="platform.html"><span class="brand-mark">N</span><span>Nexora</span></a><nav class="app-nav"><a class="active" href="platform.html">Vue d’ensemble</a><a href="#opportunities">Opportunités</a><a href="#profile">Mon profil</a><a href="#messages">Messages</a></nav><div class="app-user"><span id="userAvatar">N</span><strong id="userName">Votre profil</strong></div></header><main class="platform-main"><section class="welcome"><div><small id="dateLabel"></small><h1>Votre espace Nexora.</h1><p id="welcomeText">Votre profil, vos préférences et des opportunités sélectionnées pour vous.</p></div></section><section class="profile-summary" id="profile"><div class="profile-left"><div class="profile-big" id="profileInitial">N</div><div><small>PROFIL NEXORA</small><strong id="profileRole">Profil professionnel</strong><div class="chips" id="profileChips"></div></div></div><button class="button button-light" onclick="location.href='onboarding.html'">Modifier</button></section><section id="opportunities"><div class="section-title"><h2>Recommandé pour vous</h2><span>Démo personnalisée</span></div><div class="match-grid" id="matchGrid"></div></section><section id="messages"><div class="section-title"><h2>Messages</h2><span>Préparation du prototype</span></div><div class="empty-note">Votre espace de messages sera connecté après le moteur de matching. Les premières demandes apparaîtront ici.</div></section></main></div><script src="platform.js"></script></body></html>
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Nexora — Workspace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="platform.css"/>
+</head>
+<body>
+<div class="workspace">
+  <aside class="sidebar">
+    <a class="side-brand" href="platform.html"><span class="side-logo">N</span><span>Nexora</span></a>
+    <nav class="side-nav" aria-label="Navigation Nexora">
+      <a class="side-item active" href="#overview"><span>⌂</span>Overview</a>
+      <a class="side-item" href="#find" id="findNav"><span>⌕</span>Find</a>
+      <a class="side-item" href="#auto"><span>✦</span>Auto-Match</a>
+      <a class="side-item" href="#notifications"><span>◉</span>Notifications <b id="notificationCount">3</b></a>
+      <a class="side-item" href="#messages"><span>◌</span>Messages</a>
+      <a class="side-item" href="#profile"><span>◎</span>Profile</a>
+    </nav>
+    <div class="side-spacer"></div>
+    <div class="ai-status"><span class="pulse"></span><div><strong>Auto-Match active</strong><small>Monitoring opportunities</small></div></div>
+    <a class="side-item" href="#settings"><span>⚙</span>Settings</a>
+    <div class="side-user"><div class="user-avatar" id="sideAvatar">N</div><div><strong id="sideName">Your account</strong><small>Free plan</small></div><span>⌄</span></div>
+  </aside>
+
+  <main class="main-panel">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="side-logo">N</span><strong>Nexora</strong></div>
+      <div class="command-bar" id="commandBar"><span>⌕</span><input id="globalSearch" placeholder="Find a client, project, skill..." aria-label="Find"/><kbd>⌘ K</kbd></div>
+      <div class="top-actions"><button class="icon-btn" id="notifButton" aria-label="Notifications">◉<span class="notif-dot"></span></button><div class="top-user"><div class="user-avatar" id="topAvatar">N</div><span id="topName">Your account</span></div></div>
+    </header>
+
+    <section class="view" id="overview">
+      <div class="welcome-row"><div><span class="eyebrow">NEXORA WORKSPACE</span><h1 id="welcomeTitle">Good evening. 👋</h1><p id="welcomeSub">Your profile is ready. Nexora is continuously looking for relevant opportunities for you.</p></div><div class="ai-badge"><span class="pulse"></span>Nexora AI online</div></div>
+
+      <section class="hero-search-card" id="find">
+        <div class="hero-search-copy"><span class="eyebrow">FIND</span><h2>What are you looking for?</h2><p>Search instantly or let Nexora keep finding opportunities in the background.</p></div>
+        <div class="search-box"><input id="findInput" placeholder="e.g. Web design projects for restaurants in Kinshasa"/><button id="findButton">Find <span>→</span></button></div>
+        <div class="search-suggestions"><button>Web design in Kinshasa</button><button>Photography opportunities</button><button>Marketing clients</button><button>Restaurants needing websites</button></div>
+      </section>
+
+      <section class="automation-card" id="auto">
+        <div class="automation-icon">✦</div>
+        <div class="automation-main"><div class="automation-title"><h3>Auto-Match</h3><span class="live-pill">LIVE</span></div><p>Nexora keeps scanning for opportunities that match your profile. You don’t need to search every time.</p><div class="scan-line"><span class="scan-dot"></span><span>Monitoring opportunity signals</span><strong id="scanTimer">Just now</strong></div></div>
+        <button class="toggle on" id="autoToggle" aria-pressed="true"><span></span></button>
+      </section>
+
+      <div class="stat-grid">
+        <div class="stat-card"><small>Matches this week</small><strong>24</strong><span>+6 new</span></div>
+        <div class="stat-card"><small>High matches</small><strong>9</strong><span>80%+ compatibility</span></div>
+        <div class="stat-card"><small>Unread alerts</small><strong id="alertStat">3</strong><span>Needs your attention</span></div>
+        <div class="stat-card"><small>Profile strength</small><strong>100%</strong><span>Ready for matching</span></div>
+      </div>
+
+      <div class="section-grid">
+        <section class="panel-card" id="notifications"><div class="panel-head"><div><span class="eyebrow">NOTIFICATIONS</span><h2>New matches</h2></div><button class="text-btn" id="markRead">Mark all read</button></div><div class="notif-list" id="notifList">
+          <article class="notif-item"><div class="mini-company purple">K</div><div><strong>96% match · Studio Kivu</strong><p>New website redesign opportunity matches your profile.</p><span>8 min ago</span></div><b>NEW</b></article>
+          <article class="notif-item"><div class="mini-company green">M</div><div><strong>91% match · Maison M</strong><p>Restaurant group looking for a digital partner.</p><span>24 min ago</span></div><b>NEW</b></article>
+          <article class="notif-item"><div class="mini-company blue">N</div><div><strong>87% match · Nexum Agency</strong><p>Marketing design brief detected in your target sector.</p><span>1 h ago</span></div></article>
+        </div></section>
+
+        <section class="panel-card" id="profile"><div class="panel-head"><div><span class="eyebrow">PROFILE</span><h2>Your Nexora profile</h2></div><a class="text-btn" href="onboarding.html">Edit</a></div><div class="profile-card"><div class="profile-avatar-large" id="profileAvatar">N</div><div><h3 id="profileRole">Professional profile</h3><p id="profileMeta">International · PME</p><div class="tag-row" id="profileTags"><span>Profile complete</span><span>Auto-match ready</span></div></div></div><div class="profile-meter"><div><span>Profile strength</span><strong>100%</strong></div><div class="meter"><i></i></div></div></section>
+      </div>
+    </section>
+
+    <section class="view secondary-view" id="settings"><div class="page-heading"><span class="eyebrow">SETTINGS</span><h1>Your preferences.</h1><p>Control your alerts, matching behavior and account details.</p></div><div class="settings-grid"><div class="panel-card"><div class="setting-row"><div><strong>Email notifications</strong><span>Get notified when Nexora finds a high match.</span></div><button class="toggle on"><span></span></button></div><div class="setting-row"><div><strong>Auto-Match alerts</strong><span>Notify me when a new opportunity is detected.</span></div><button class="toggle on"><span></span></button></div><div class="setting-row"><div><strong>Theme</strong><span>Dark workspace</span></div><span class="setting-value">Dark</span></div></div></div></section>
+  </main>
+</div>
+<div class="loading-overlay hidden" id="searchLoading"><div class="loader-orb"><span></span><span></span><span></span></div><div class="loader-copy"><span class="eyebrow">NEXORA AI</span><h2 id="loaderTitle">Finding opportunities...</h2><p id="loaderText">Reading your request and matching it with opportunity signals.</p></div><div class="loader-steps"><div class="done">Understanding request ✓</div><div class="active" id="loaderStep">Scanning opportunity signals</div><div>Ranking potential matches</div></div></div>
+<script src="platform.js?v=20260820-6"></script>
+</body>
+</html>
