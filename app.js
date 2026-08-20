@@ -11,5 +11,43 @@ document.querySelector('a[href="#login"]')?.addEventListener('click', (event) =>
 const sections = [...document.querySelectorAll('main section[id]')]; const navLinks = [...document.querySelectorAll('.nav-link')];
 const observer = new IntersectionObserver((entries) => { const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => b.intersectionRatio-a.intersectionRatio)[0]; if (!visible) return; const current = visible.target.id; navLinks.forEach((link) => link.classList.toggle('active', link.dataset.section === current)); }, { rootMargin: '-35% 0px -55% 0px', threshold: [0.01,0.2,0.5] }); sections.forEach((section) => observer.observe(section));
 window.addEventListener('hashchange', () => { const target = window.location.hash; if (target) document.querySelector(target)?.scrollIntoView({ behavior:'smooth' }); });
+
+// Profils de démonstration supplémentaires : avatars générés, clairement présentés comme fictifs.
+const demoProfiles = [
+  ['Kevin R.','Full-stack developer','Johannesburg','Kevin'],
+  ['Grace T.','UX/UI designer','Lagos','Grace'],
+  ['Maya S.','Social media strategist','Nairobi','Maya'],
+  ['Jonathan P.','Video editor','Accra','Jonathan'],
+  ['Esther W.','Business consultant','Kigali','Esther'],
+  ['Noah A.','Graphic designer','Dakar','Noah']
+];
 const track = document.getElementById('testimonialTrack');
-if (track) { let index = 0; const cards = [...track.children]; const advance = () => { if (window.innerWidth <= 600) { index = (index + 1) % cards.length; track.style.transform = `translateX(-${index * (cards[0].offsetWidth + 16)}px)`; } else { index = (index + 1) % Math.max(1, cards.length - 2); track.style.transform = `translateX(-${index * (cards[0].offsetWidth + 16)}px)`; } }; window.setInterval(advance, 3600); window.addEventListener('resize', () => { index = 0; track.style.transform = 'translateX(0)'; }); }
+if (track) {
+  demoProfiles.forEach(([name, role, city, seed]) => {
+    const card = document.createElement('article');
+    card.className = 'testimonial-card';
+    card.innerHTML = `<img src="https://api.dicebear.com/9.x/personas/svg?seed=${seed}" alt="Avatar de démonstration ${name}" /><div><div class="stars">★★★★★</div><p>« Nexora m'aide à voir rapidement les opportunités qui correspondent à mon profil et à mes objectifs. »</p><strong>${name}</strong><span>${role} · ${city}</span></div>`;
+    track.appendChild(card);
+  });
+
+  // Double la piste pour un défilement continu.
+  const originals = [...track.children];
+  originals.forEach((card) => track.appendChild(card.cloneNode(true)));
+  let offset = 0;
+  const step = () => {
+    const first = track.children[0];
+    if (!first) return;
+    const distance = first.getBoundingClientRect().width + 16;
+    offset += distance;
+    track.style.transition = 'transform .65s ease';
+    track.style.transform = `translateX(-${offset}px)`;
+    if (offset >= distance * originals.length) {
+      window.setTimeout(() => {
+        track.style.transition = 'none';
+        offset = 0;
+        track.style.transform = 'translateX(0)';
+      }, 700);
+    }
+  };
+  window.setInterval(step, 3200);
+}
