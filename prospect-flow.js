@@ -19,13 +19,13 @@
   }
   function bindRow(row,i){
     if(!row||row.dataset.prospectBound)return;
-    row.dataset.prospectBound='1';
+    row.dataset.prospectBound='1'; row.classList.add('nexora-clickable-prospect'); row.title='Cliquer pour voir les détails'; row.style.cursor='pointer'; row.style.transition='transform .2s ease,box-shadow .2s ease,background .2s ease';
+    row.addEventListener('mouseenter',()=>{row.style.transform='translateY(-2px)';row.style.boxShadow='0 8px 24px rgba(17,24,39,.10)';row.style.background='#fafbfc'});
+    row.addEventListener('mouseleave',()=>{row.style.transform='';row.style.boxShadow='';row.style.background=''});
     const action=row.querySelector('.prospect-arrow,.prospect-action,.arrow,.view-prospect');
-    if(action){action.style.cursor='pointer';action.title='Voir les détails';action.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openProspect(i)});}
+    if(action){action.style.cursor='pointer';action.title='Voir les détails';action.style.transition='transform .2s ease';action.addEventListener('mouseenter',()=>action.style.transform='translateX(4px)');action.addEventListener('mouseleave',()=>action.style.transform='');action.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openProspect(i)});}
     row.addEventListener('click',e=>{if(e.target.closest('button,a,.prospect-arrow,.prospect-action,.arrow,.view-prospect'))return;openProspect(i)});
   }
   function bindAll(){[...document.querySelectorAll('.prospect')].forEach((r,i)=>bindRow(r,i));}
-  bindAll();
-  const observer=new MutationObserver(bindAll);observer.observe(document.body,{childList:true,subtree:true});
-  window.NexoraOpenProspect=openProspect;
+  bindAll(); new MutationObserver(bindAll).observe(document.body,{childList:true,subtree:true}); window.NexoraOpenProspect=openProspect;
 })();
