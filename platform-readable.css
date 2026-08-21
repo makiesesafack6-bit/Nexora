@@ -1,0 +1,58 @@
+/* Nexora readability v2 — intentionally larger for desktop readability */
+.table-head{font-size:11px!important;padding:14px 16px!important;letter-spacing:.06em}
+.prospect{min-height:78px!important;padding:15px 16px!important}
+.person strong{font-size:13px!important}
+.person small{font-size:10px!important}
+.source{font-size:11px!important}
+.prospect p{font-size:11px!important;line-height:1.5!important}
+.match{font-size:12px!important;padding:8px 10px!important}
+.prospect>button{width:30px!important;height:30px!important;font-size:14px!important}
+.panel-head h2{font-size:21px!important}
+.text-button,.profile-panel a{font-size:12px!important}
+.eyebrow{font-size:11px!important}
+.auto-copy strong{font-size:16px!important}
+.auto-copy p{font-size:12px!important}
+.scan{font-size:11px!important}
+.live{font-size:9px!important}
+.campaign-card h2{font-size:23px!important}
+.campaign-card>p{font-size:11px!important}
+.campaign-card label{font-size:11px!important}
+.campaign-card input,.campaign-card select{font-size:12px!important;padding:12px!important}
+.campaign-card button{font-size:12px!important;padding:13px!important}
+.profile-mini strong{font-size:13px!important}
+.profile-mini small{font-size:10px!important}
+.profile-progress{font-size:10px!important}
+.alerts strong{font-size:12px!important}
+.alerts p{font-size:11px!important}
+.alerts small{font-size:9px!important}
+.alerts article>b{font-size:9px!important}
+.setting-row strong{font-size:13px!important}
+.setting-row small{font-size:11px!important}
+.setting-value{font-size:10px!important}
+.stats span{font-size:11px!important}
+.stats strong{font-size:30px!important}
+.stats small{font-size:10px!important}
+.nav-item{font-size:13px!important}
+.ai-mini strong{font-size:12px!important}
+.ai-mini small{font-size:10px!important}
+.side-user strong,.top-user strong{font-size:12px!important}
+.side-user small,.top-user small{font-size:10px!important}
+.search-title h2{font-size:32px!important}
+.search-title p{font-size:12px!important}
+.search-row input{font-size:13px!important}
+.search-row button{font-size:12px!important}
+.chips button{font-size:10px!important}
+.heading-row h1{font-size:38px!important}
+.heading-row p{font-size:13px!important}
+.primary-action{font-size:12px!important}
+@media(max-width:700px){
+  .table-head{font-size:10px!important}
+  .person strong{font-size:13px!important}
+  .person small{font-size:10px!important}
+  .panel-head h2{font-size:20px!important}
+  .heading-row h1{font-size:31px!important}
+  .heading-row p{font-size:12px!important}
+  .search-title h2{font-size:28px!important}
+  .search-title p{font-size:11px!important}
+  .prospect p{font-size:11px!important}
+}
