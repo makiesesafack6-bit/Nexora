@@ -32,22 +32,72 @@ globalSearch?.addEventListener('keydown',e=>{if(e.key==='Enter')showComingSoon(e
 
 document.getElementById('findNav')?.addEventListener('click',()=>setTimeout(()=>findInput?.focus(),150));
 
-document.getElementById('notifButton')?.addEventListener('click',()=>document.getElementById('notifications')?.scrollIntoView({behavior:'smooth'}));
+document.getElementById('notifButton')?.addEventListener('click',()=>document.getElementById('messages')?.scrollIntoView({behavior:'smooth'}));
 document.getElementById('markRead')?.addEventListener('click',()=>{
-  document.querySelectorAll('.notif-item>b').forEach(el=>el.remove());
+  document.querySelectorAll('.alerts article>b').forEach(el=>el.remove());
   setText('notificationCount','0'); setText('alertStat','0'); showToast('Notifications marquées comme lues.');
 });
 
 document.getElementById('autoToggle')?.addEventListener('click',e=>{
   const btn=e.currentTarget; const on=btn.classList.toggle('on'); btn.setAttribute('aria-pressed',String(on));
-  const status=document.querySelector('.ai-status strong');
+  const status=document.querySelector('.ai-mini strong');
   if(status) status.textContent=on?'Auto-Match active':'Auto-Match paused';
   showToast(on?'Nexora Auto-Match est actif.':'Auto-Match a été mis en pause.');
 });
 
+// Demo detection timestamps: Auto-Match records when Nexora says it discovered each opportunity.
+const detectedOffsets = [8, 24, 61, 143];
+const formatDetected = (minutesAgo) => {
+  const d = new Date(Date.now() - minutesAgo * 60000);
+  return d.toLocaleString('fr-FR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
+};
+
+document.querySelectorAll('.prospect').forEach((row, index) => {
+  const small = row.querySelector('.person small');
+  if (small) small.textContent = `${small.textContent} · Détecté ${formatDetected(detectedOffsets[index] || 10)}`;
+});
+
+document.querySelectorAll('.alerts article').forEach((article, index) => {
+  const small = article.querySelector('small');
+  if (small) {
+    const minutes = detectedOffsets[index] || 10;
+    small.textContent = `Détecté le ${formatDetected(minutes)} · il y a ${minutes >= 60 ? `${Math.floor(minutes/60)} h` : `${minutes} min`}`;
+  }
+});
+
+// Animated AI-style placeholder in Find. It never overwrites what the user types.
+const aiPrompts = [
+  'Je cherche un photographe à Kinshasa...',
+  'Je cherche des entreprises qui ont besoin d’un site web...',
+  'Je cherche des clients pour mon agence...',
+  'Trouve-moi des prospects dans mon secteur...',
+  'Je veux trouver des opportunités qui me correspondent...'
+];
+let promptIndex = 0;
+let promptChar = 0;
+let deleting = false;
+let placeholderTimer;
+const animatePlaceholder = () => {
+  if (!findInput || document.activeElement === findInput || findInput.value) return;
+  const text = aiPrompts[promptIndex];
+  if (!deleting) {
+    promptChar++;
+    findInput.placeholder = text.slice(0, promptChar) + (promptChar < text.length ? '▌' : '');
+    if (promptChar >= text.length) { deleting = true; placeholderTimer = setTimeout(animatePlaceholder, 1700); return; }
+  } else {
+    promptChar--;
+    findInput.placeholder = text.slice(0, promptChar) + (promptChar > 0 ? '▌' : '');
+    if (promptChar <= 0) { deleting = false; promptIndex = (promptIndex + 1) % aiPrompts.length; }
+  }
+  placeholderTimer = setTimeout(animatePlaceholder, deleting ? 35 : 55);
+};
+setTimeout(animatePlaceholder, 500);
+findInput?.addEventListener('focus',()=>{ clearTimeout(placeholderTimer); findInput.placeholder='Décrivez ce que vous recherchez...'; });
+findInput?.addEventListener('blur',()=>{ if(!findInput.value) { promptChar=0; deleting=false; clearTimeout(placeholderTimer); animatePlaceholder(); } });
+
 // Keep the workspace feeling alive without pretending a live external search already exists.
 let seconds=0; setInterval(()=>{seconds++; const target=document.getElementById('scanTimer'); if(target && seconds<60) target.textContent=`il y a ${seconds}s`;},1000);
 
-document.querySelectorAll('.side-item[href^="#"]').forEach(link=>link.addEventListener('click',e=>{
-  const id=link.getAttribute('href').slice(1); const target=document.getElementById(id); if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});document.querySelectorAll('.side-item').forEach(x=>x.classList.remove('active'));link.classList.add('active');}
+document.querySelectorAll('.nav-item[href^="#"]').forEach(link=>link.addEventListener('click',e=>{
+  const id=link.getAttribute('href').slice(1); const target=document.getElementById(id); if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth'});document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));link.classList.add('active');}
 }));
