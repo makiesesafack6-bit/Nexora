@@ -8,14 +8,32 @@ function proceed(provider='email'){
   }else{
     localStorage.setItem('nexoraAccount',JSON.stringify({...existing,name:existing.name||`${provider} User`,email:existing.email||`demo-${provider.toLowerCase()}@nexora.local`,provider:provider.toLowerCase(),signedIn:true,demo:true}));
   }
-  loginCard.classList.add('hidden'); loaderCard.classList.remove('hidden');
+  loginCard.classList.add('hidden');
+  loaderCard.classList.remove('hidden');
+  const loaderText=document.getElementById('loginLoaderText');
+  const status=document.getElementById('loginStatus');
   const steps=[
-    ['Vérification de votre espace Nexora.','Compte trouvé ✓'],
-    ['Récupération de votre profil et de vos préférences.','Profil chargé ✓'],
-    ['Préparation de votre workspace personnalisé.','Workspace prêt ✓']
+    ['Vérification de votre espace Nexora.','Vérification du compte…'],
+    ['Récupération de votre profil et de vos préférences.','Profil et préférences…'],
+    ['Analyse de votre espace personnalisé.','Analyse Nexora AI…'],
+    ['Recherche de la configuration adaptée à votre profil.','Configuration du workspace…'],
+    ['Préparation de votre workspace personnalisé.','Workspace presque prêt…'],
+    ['Synchronisation finale de votre espace Nexora.','Synchronisation finale…']
   ];
+  const minimumDuration=15000;
+  const startedAt=Date.now();
   let i=0;
-  const tick=()=>{if(i<steps.length){document.getElementById('loginLoaderText').textContent=steps[i][0];document.getElementById('loginStatus').textContent=steps[i][1];i++;setTimeout(tick,750);}else{window.location.href='platform.html';}};
+  const tick=()=>{
+    if(i<steps.length){
+      loaderText.textContent=steps[i][0];
+      status.textContent=steps[i][1];
+      i++;
+      setTimeout(tick,2500);
+      return;
+    }
+    const remaining=Math.max(0,minimumDuration-(Date.now()-startedAt));
+    setTimeout(()=>{status.textContent='✓ Espace prêt';loaderText.textContent='Votre espace Nexora est prêt.';setTimeout(()=>{window.location.href='platform.html';},350);},remaining);
+  };
   tick();
 }
 document.getElementById('loginForm')?.addEventListener('submit',e=>{e.preventDefault();proceed('email');});
