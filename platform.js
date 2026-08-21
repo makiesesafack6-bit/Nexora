@@ -37,16 +37,31 @@ const formatDetected = minutesAgo => {
   return d.toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
 };
 
-document.querySelectorAll('.prospect').forEach((row,index)=>{
+/* Recent prospect rows: the whole row is clickable, while the arrow gives a strong visual cue. */
+document.querySelectorAll('.prospect').forEach((row)=>{
+  const id=Number(row.dataset.prospectId);
+  const prospect=prospects.find(p=>p.id===id);
   const small=row.querySelector('.person small');
-  if(small) small.textContent=`${small.textContent} · Détecté ${formatDetected(prospects[index]?.detected || 10)}`;
-  const button=row.querySelector('button');
-  if(button) button.addEventListener('click',()=>openProspect(prospects[index]));
+  if(small && prospect) small.textContent=`${small.textContent} · Détecté ${formatDetected(prospect.detected)}`;
+  if(prospect){
+    row.addEventListener('click',()=>openProspect(prospect));
+    row.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProspect(prospect);}});
+  }
+  const button=row.querySelector('.prospect-open');
+  if(button) button.addEventListener('click',e=>{e.stopPropagation(); if(prospect) openProspect(prospect);});
 });
 
+/* Auto-Match notifications are also real click targets and open the same prospect detail view. */
 document.querySelectorAll('.alerts article').forEach((article,index)=>{
   const small=article.querySelector('small');
-  if(small){const m=prospects[index]?.detected||10;small.textContent=`Détecté le ${formatDetected(m)} · il y a ${m>=60?`${Math.floor(m/60)} h`:`${m} min`}`;}
+  const m=prospects[index]?.detected||10;
+  if(small) small.textContent=`Détecté le ${formatDetected(m)} · il y a ${m>=60?`${Math.floor(m/60)} h`:`${m} min`}`;
+  const id=Number(article.dataset.prospectId);
+  const prospect=prospects.find(p=>p.id===id);
+  if(prospect){
+    article.addEventListener('click',()=>openProspect(prospect));
+    article.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProspect(prospect);}});
+  }
 });
 
 function ensureModal(){
@@ -60,6 +75,7 @@ function ensureModal(){
 }
 function closeModal(){const m=document.getElementById('nexoraModal');if(m)m.style.display='none';}
 function openProspect(p){
+  if(!p)return;
   const m=ensureModal(), c=document.getElementById('nexoraModalCard');
   c.innerHTML=`<button id="closeModal" style="float:right;border:0;background:#171d29;color:#9da5b5;border-radius:10px;width:34px;height:34px;cursor:pointer">×</button><div style="display:flex;gap:14px;align-items:center"><div style="width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,#6049e8,#8b72ff);display:grid;place-items:center;color:#fff;font:800 20px Manrope">${p.avatar}</div><div><span style="color:#8b79ff;font-size:9px;font-weight:800">${p.source} · DETECTED ${formatDetected(p.detected)}</span><h2 style="margin:5px 0 3px;color:#fff;font:800 24px Manrope">${p.name}</h2><p style="margin:0;color:#7d8799;font-size:10px">${p.handle} · ${p.role} · ${p.location}</p></div></div><div style="margin:24px 0;padding:17px;border:1px solid #242b3a;border-radius:16px;background:#111622"><div style="display:flex;justify-content:space-between;gap:15px"><strong style="color:#eef0f5;font-size:11px">Nexora Match</strong><b style="color:#9ae8be;font-size:18px">${p.match}%</b></div><div style="height:6px;background:#1b2230;border-radius:99px;margin-top:10px;overflow:hidden"><i style="display:block;height:100%;width:${p.match}%;background:linear-gradient(90deg,#6a55ff,#5de1a2);border-radius:99px"></i></div></div><span style="color:#727d90;font-size:9px;font-weight:800;letter-spacing:.1em">NEED DETECTED</span><h3 style="margin:7px 0;color:#f1f2f5;font:700 18px Manrope">${p.need}</h3><p style="color:#858ea0;font-size:11px;line-height:1.7">${p.description}</p><div style="display:flex;gap:7px;flex-wrap:wrap;margin:16px 0 24px">${p.tags.map(t=>`<span style="padding:7px 9px;background:#171d29;border:1px solid #242b3a;border-radius:999px;color:#8d98aa;font-size:9px">${t}</span>`).join('')}</div><button id="prepareContact" style="width:100%;height:44px;border:0;border-radius:11px;background:linear-gradient(135deg,#6d54ff,#8058ff);color:#fff;font-size:10px;font-weight:800">Préparer le contact</button>`;
   m.style.display='flex'; document.getElementById('closeModal').onclick=closeModal; document.getElementById('prepareContact').onclick=()=>{showToast('Le contact sera activé avec la messagerie Nexora.');};
@@ -84,21 +100,29 @@ findButton?.addEventListener('click',()=>runSearch(findInput?.value));
 findInput?.addEventListener('keydown',e=>{if(e.key==='Enter')runSearch(findInput.value);});
 document.querySelectorAll('.chips button').forEach(btn=>btn.addEventListener('click',()=>{findInput.value=btn.textContent;runSearch(btn.textContent);}));
 document.getElementById('findNav')?.addEventListener('click',()=>setTimeout(()=>findInput?.focus(),150));
-document.querySelectorAll('.prospect button').forEach(btn=>btn.addEventListener('click',e=>e.stopPropagation()));
 
 document.getElementById('notifButton')?.addEventListener('click',()=>document.getElementById('messages')?.scrollIntoView({behavior:'smooth'}));
 document.getElementById('markRead')?.addEventListener('click',()=>{document.querySelectorAll('.alerts article>b').forEach(el=>el.remove());setText('notificationCount','0');setText('alertStat','0');showToast('Notifications marquées comme lues.');});
 
 document.getElementById('autoToggle')?.addEventListener('click',e=>{const btn=e.currentTarget;const on=btn.classList.toggle('on');btn.setAttribute('aria-pressed',String(on));const status=document.querySelector('.ai-mini strong');if(status)status.textContent=on?'Auto-Match active':'Auto-Match paused';showToast(on?'Nexora Auto-Match est actif.':'Auto-Match a été mis en pause.');});
 
-/* Auto-Match demo: continuously simulates the background worker and can surface a new notification. */
+/* Auto-Match demo: continuously simulates the background worker and surfaces a clickable match. */
 let autoSeen=false;
 setTimeout(()=>{
   const toggle=document.getElementById('autoToggle');
   if(toggle?.classList.contains('on') && !autoSeen){
     autoSeen=true;const p=prospects[4];const alerts=document.querySelector('.alerts');
-    if(alerts){const article=document.createElement('article');article.innerHTML=`<div class="alert-icon">${p.avatar}</div><div><strong>${p.match}% match · ${p.name}</strong><p>${p.need} — opportunité détectée par Auto-Match.</p><small>Détecté le ${formatDetected(0)} · à l’instant</small></div><b>NEW</b>`;alerts.prepend(article);}
-    showToast(`Nouveau match ${p.match}% détecté par Auto-Match.`);
+    if(alerts){
+      const article=document.createElement('article');
+      article.className='alert-clickable';
+      article.dataset.prospectId=String(p.id);
+      article.tabIndex=0;
+      article.innerHTML=`<div class="alert-icon">${p.avatar}</div><div><strong>${p.match}% match · ${p.name}</strong><p>${p.need} — opportunité détectée par Auto-Match.</p><small>Détecté le ${formatDetected(0)} · à l’instant</small></div><b>NEW</b><span class="alert-arrow" aria-hidden="true">→</span>`;
+      article.addEventListener('click',()=>openProspect(p));
+      article.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openProspect(p);}});
+      alerts.prepend(article);
+    }
+    showToast(`Nouveau match ${p.match}% détecté par Auto-Match — cliquez pour voir les détails.`);
   }
 },12000);
 
