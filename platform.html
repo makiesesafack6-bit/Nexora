@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="platform.css?v=20260821-3">
-<link rel="stylesheet" href="platform-readable.css?v=20260821-2">
+<link rel="stylesheet" href="platform-readable.css?v=20260821-4">
 </head>
 <body>
 <div class="app-shell">
@@ -61,10 +61,10 @@
           <div class="panel-head"><div><span class="eyebrow">RECENT PROSPECTS</span><h2>People who may need what you offer</h2></div><button class="text-button">View all →</button></div>
           <div class="prospect-table">
             <div class="table-head"><span>PROSPECT</span><span>SOURCE</span><span>NEED DETECTED</span><span>MATCH</span><span></span></div>
-            <div class="prospect"><div class="person"><div class="person-avatar a1">J</div><div><strong>@jessica_events</strong><small>Jessica Events</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a photographer for her wedding</p><b class="match high">95%</b><button>→</button></div>
-            <div class="prospect"><div class="person"><div class="person-avatar a2">B</div><div><strong>@business_ctg</strong><small>Business CTG</small></div></div><span class="source facebook">f Facebook</span><p>Needs a website for their business</p><b class="match high">89%</b><button>→</button></div>
-            <div class="prospect"><div class="person"><div class="person-avatar a3">T</div><div><strong>@tony_mart</strong><small>Tony Mart</small></div></div><span class="source tiktok">♪ TikTok</span><p>Searching for online store solutions</p><b class="match medium">80%</b><button>→</button></div>
-            <div class="prospect"><div class="person"><div class="person-avatar a4">A</div><div><strong>@coach_anna</strong><small>Coach Anna</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a marketing coach</p><b class="match medium">72%</b><button>→</button></div>
+            <div class="prospect" data-prospect-id="1" tabindex="0"><div class="person"><div class="person-avatar a1">J</div><div><strong>@jessica_events</strong><small>Jessica Events</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a photographer for her wedding</p><b class="match high">95%</b><button class="prospect-open" aria-label="Voir les détails de Jessica Events" title="Voir les détails">→</button></div>
+            <div class="prospect" data-prospect-id="2" tabindex="0"><div class="person"><div class="person-avatar a2">B</div><div><strong>@business_ctg</strong><small>Business CTG</small></div></div><span class="source facebook">f Facebook</span><p>Needs a website for their business</p><b class="match high">89%</b><button class="prospect-open" aria-label="Voir les détails de Business CTG" title="Voir les détails">→</button></div>
+            <div class="prospect" data-prospect-id="3" tabindex="0"><div class="person"><div class="person-avatar a3">T</div><div><strong>@tony_mart</strong><small>Tony Mart</small></div></div><span class="source tiktok">♪ TikTok</span><p>Searching for online store solutions</p><b class="match medium">80%</b><button class="prospect-open" aria-label="Voir les détails de Tony Mart" title="Voir les détails">→</button></div>
+            <div class="prospect" data-prospect-id="4" tabindex="0"><div class="person"><div class="person-avatar a4">A</div><div><strong>@coach_anna</strong><small>Coach Anna</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a marketing coach</p><b class="match medium">72%</b><button class="prospect-open" aria-label="Voir les détails de Coach Anna" title="Voir les détails">→</button></div>
           </div>
         </section>
 
@@ -74,13 +74,13 @@
         </aside>
       </div>
 
-      <section class="notifications-panel panel" id="messages"><div class="panel-head"><div><span class="eyebrow">NOTIFICATIONS</span><h2>Latest matches</h2></div><button class="text-button" id="markRead">Mark all read</button></div><div class="alerts"><article><div class="alert-icon">K</div><div><strong>96% match · Studio Kivu</strong><p>New website redesign opportunity detected.</p><small>8 min ago</small></div><b>NEW</b></article><article><div class="alert-icon green">M</div><div><strong>91% match · Maison M</strong><p>Restaurant group looking for a digital partner.</p><small>24 min ago</small></div><b>NEW</b></article><article><div class="alert-icon blue">N</div><div><strong>87% match · Nexum Agency</strong><p>Marketing design brief detected.</p><small>1 h ago</small></div></article></div></section>
+      <section class="notifications-panel panel" id="messages"><div class="panel-head"><div><span class="eyebrow">NOTIFICATIONS</span><h2>Latest matches</h2></div><button class="text-button" id="markRead">Mark all read</button></div><div class="alerts"><article class="alert-clickable" data-prospect-id="5" tabindex="0"><div class="alert-icon">K</div><div><strong>96% match · Studio Kivu</strong><p>New website redesign opportunity detected.</p><small>8 min ago</small></div><b>NEW</b><span class="alert-arrow" aria-hidden="true">→</span></article><article class="alert-clickable" data-prospect-id="6" tabindex="0"><div class="alert-icon green">M</div><div><strong>91% match · Maison M</strong><p>Restaurant group looking for a digital partner.</p><small>24 min ago</small></div><b>NEW</b><span class="alert-arrow" aria-hidden="true">→</span></article><article><div class="alert-icon blue">N</div><div><strong>87% match · Nexum Agency</strong><p>Marketing design brief detected.</p><small>1 h ago</small></div></article></div></section>
 
       <section class="settings panel" id="settings"><div class="panel-head"><div><span class="eyebrow">SETTINGS</span><h2>Your preferences</h2></div></div><div class="setting-row"><div><strong>Auto-Match alerts</strong><small>Notify me when Nexora detects a strong opportunity.</small></div><button class="toggle on"><span></span></button></div><div class="setting-row"><div><strong>Dark workspace</strong><small>Nexora's AI workspace appearance.</small></div><span class="setting-value">ON</span></div></section>
     </section>
   </main>
 </div>
 <div class="loading-overlay hidden" id="searchLoading" aria-live="polite"><div class="loader-orb"><span></span><span></span><span></span></div><span class="eyebrow">NEXORA AI</span><h2 id="searchLoadingTitle">Analyse de votre recherche...</h2><p id="searchLoadingText">Compréhension de la demande et analyse des signaux d’opportunité.</p><div class="search-progress-wrap"><div class="search-progress"><i id="searchProgressBar"></i></div><strong id="searchProgressLabel">0%</strong></div><div class="loader-steps"><span id="searchStep1">✓ Lecture de la demande</span><span id="searchStep2">○ Scan des opportunités</span><span id="searchStep3">○ Comparaison des profils</span><span id="searchStep4">○ Classement des meilleurs matchs</span></div><button class="cancel-search overlay-cancel" id="cancelFindButton" type="button">Annuler la recherche</button></div>
-<script src="platform.js?v=20260821-3"></script>
+<script src="platform.js?v=20260821-4"></script>
 </body>
 </html>
