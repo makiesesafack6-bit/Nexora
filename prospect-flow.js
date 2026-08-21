@@ -13,9 +13,19 @@
     modal.style.display='flex';
     modal.querySelector('#closeProspect').onclick=()=>modal.style.display='none';
     modal.querySelector('#contactProspect').onclick=()=>modal.querySelector('#contactBox').style.display='block';
-    modal.querySelector('#copyProspect').onclick=()=>navigator.clipboard?.writeText(p.name+' · '+p.need+' · '+p.location); 
+    modal.querySelector('#copyProspect').onclick=()=>navigator.clipboard?.writeText(p.name+' · '+p.need+' · '+p.location);
     modal.querySelector('#copyMessage').onclick=()=>navigator.clipboard?.writeText('Bonjour '+p.name+', j’ai vu que vous recherchez '+p.need.toLowerCase()+'. Je peux vous aider sur ce projet. Seriez-vous disponible pour en discuter ?');
     modal.querySelector('#sendDemo').onclick=()=>{modal.querySelector('#sendDemo').textContent='✓ Envoyé · Démo';modal.querySelector('#sendDemo').disabled=true};
   }
-  document.addEventListener('click',e=>{const row=e.target.closest('.prospect');if(!row)return;const rows=[...document.querySelectorAll('.prospect')].filter(r=>r.style.display!=='none');openProspect(Math.max(0,rows.indexOf(row)));});
+  function bindRow(row,i){
+    if(!row||row.dataset.prospectBound)return;
+    row.dataset.prospectBound='1';
+    const action=row.querySelector('.prospect-arrow,.prospect-action,.arrow,.view-prospect');
+    if(action){action.style.cursor='pointer';action.title='Voir les détails';action.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openProspect(i)});}
+    row.addEventListener('click',e=>{if(e.target.closest('button,a,.prospect-arrow,.prospect-action,.arrow,.view-prospect'))return;openProspect(i)});
+  }
+  function bindAll(){[...document.querySelectorAll('.prospect')].forEach((r,i)=>bindRow(r,i));}
+  bindAll();
+  const observer=new MutationObserver(bindAll);observer.observe(document.body,{childList:true,subtree:true});
+  window.NexoraOpenProspect=openProspect;
 })();
