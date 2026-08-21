@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="platform.css?v=20260821-3">
+<link rel="stylesheet" href="platform-readable.css?v=20260821-2">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" href="platform.html"><span class="logo">N</span><strong>Nexora</strong></a>
+    <div class="plan-card"><span class="plan-label">YOUR PLAN</span><strong>Free</strong><small>Unlimited demo access</small></div>
+    <nav>
+      <a class="nav-item active" href="#overview"><span>⌂</span>Dashboard</a>
+      <a class="nav-item" href="#find" id="findNav"><span>⌕</span>Find</a>
+      <a class="nav-item" href="#auto"><span>✦</span>Auto-Match<span class="live-dot"></span></a>
+      <a class="nav-item" href="#prospects"><span>♙</span>Prospects</a>
+      <a class="nav-item" href="#messages"><span>▱</span>Messages<span class="nav-badge">3</span></a>
+      <a class="nav-item" href="#analytics"><span>⌁</span>Analytics</a>
+      <a class="nav-item" href="#settings"><span>⚙</span>Settings</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="ai-mini"><span class="pulse"></span><div><strong>Auto-Match active</strong><small>Scanning continuously</small></div></div>
+      <div class="side-user"><div class="avatar" id="sideAvatar">N</div><div><strong id="sideName">Your account</strong><small>Free plan</small></div><span>⋮</span></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="mobile-brand"><span class="logo">N</span><strong>Nexora</strong></div>
+      <div class="top-spacer"></div>
+      <button class="bell" id="notifButton" aria-label="Notifications">♧<span></span></button>
+      <div class="top-user"><div class="avatar" id="topAvatar">N</div><div><strong id="topName">Your account</strong><small>Professional</small></div></div>
+    </header>
+
+    <section class="content" id="overview">
+      <div class="heading-row"><div><span class="eyebrow">DASHBOARD</span><h1 id="welcomeTitle">Welcome back. 👋</h1><p id="welcomeSub">Nexora is working in the background to find opportunities that match you.</p></div><button class="primary-action" id="newSearchBtn">＋ New Search</button></div>
+
+      <div class="stats">
+        <article><span>Active searches</span><strong>1</strong><small>Auto-Match running</small></article>
+        <article><span>Prospects found</span><strong>24</strong><small class="up">+6 this week</small></article>
+        <article><span>Messages sent</span><strong>0</strong><small>Ready when Find is active</small></article>
+        <article><span>High matches</span><strong>9</strong><small class="up">80%+ compatibility</small></article>
+      </div>
+
+      <section class="search-card" id="find">
+        <div class="search-title"><div><span class="eyebrow">NEXORA AI</span><h2>Find your next client.</h2><p>Describe what you offer and Nexora will prepare the best matches.</p></div><div class="ai-pill"><span class="pulse"></span>AI ready</div></div>
+        <div class="search-row"><input id="findInput" placeholder="e.g. I'm a photographer looking for wedding clients in Kinshasa..."/><button id="findButton">⌕ Find Clients</button></div>
+        <div class="chips"><button>Photographer in Kinshasa</button><button>Web developer</button><button>Online store</button><button>Coaching</button><button>Real estate</button></div>
+      </section>
+
+      <section class="automation" id="auto"><div class="auto-icon">✦</div><div class="auto-copy"><div><strong>Auto-Match</strong><span class="live">LIVE</span></div><p>Nexora keeps searching automatically using your profile. New high matches will appear in your notifications.</p><div class="scan"><span class="pulse"></span><span id="autoStatusText">Recherche automatique en cours</span><b id="scanTimer">en continu</b></div></div><button class="cancel-search" id="cancelAutoButton" type="button">Annuler la recherche</button><button class="toggle on" id="autoToggle" aria-label="Activer ou désactiver Auto-Match"><span></span></button></section>
+
+      <div class="lower-grid">
+        <section class="panel" id="prospects">
+          <div class="panel-head"><div><span class="eyebrow">RECENT PROSPECTS</span><h2>People who may need what you offer</h2></div><button class="text-button">View all →</button></div>
+          <div class="prospect-table">
+            <div class="table-head"><span>PROSPECT</span><span>SOURCE</span><span>NEED DETECTED</span><span>MATCH</span><span></span></div>
+            <div class="prospect"><div class="person"><div class="person-avatar a1">J</div><div><strong>@jessica_events</strong><small>Jessica Events</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a photographer for her wedding</p><b class="match high">95%</b><button>→</button></div>
+            <div class="prospect"><div class="person"><div class="person-avatar a2">B</div><div><strong>@business_ctg</strong><small>Business CTG</small></div></div><span class="source facebook">f Facebook</span><p>Needs a website for their business</p><b class="match high">89%</b><button>→</button></div>
+            <div class="prospect"><div class="person"><div class="person-avatar a3">T</div><div><strong>@tony_mart</strong><small>Tony Mart</small></div></div><span class="source tiktok">♪ TikTok</span><p>Searching for online store solutions</p><b class="match medium">80%</b><button>→</button></div>
+            <div class="prospect"><div class="person"><div class="person-avatar a4">A</div><div><strong>@coach_anna</strong><small>Coach Anna</small></div></div><span class="source instagram">◎ Instagram</span><p>Looking for a marketing coach</p><b class="match medium">72%</b><button>→</button></div>
+          </div>
+        </section>
+
+        <aside class="side-panel">
+          <section class="campaign-card" id="newCampaignBtn"><span class="eyebrow">QUICK SEARCH</span><h2>What do you offer?</h2><p>Tell Nexora what you do and who you want to reach.</p><label>Your proposition<input id="quickProposition" placeholder="e.g. I'm a photographer"></label><label>Who are you looking for?<input id="quickClient" placeholder="e.g. People planning weddings"></label><label>Where?<input id="quickLocation" value="Kinshasa, RDC"></label><label>Search range<select id="quickRange"><option>Local (Within your city)</option><option>National</option><option>International</option></select></label><button id="quickFind">Find Clients</button></section>
+          <section class="profile-panel" id="profile"><div class="panel-head"><div><span class="eyebrow">YOUR PROFILE</span><h2 id="profileRole">Professional</h2></div><a href="onboarding.html">Edit</a></div><div class="profile-mini"><div class="profile-avatar" id="profileAvatar">N</div><div><strong id="profileMeta">International · PME</strong><small id="profileSkills">Profile complete</small></div></div><div class="profile-progress"><span>Profile strength</span><b>100%</b><i></i></div></section>
+        </aside>
+      </div>
+
+      <section class="notifications-panel panel" id="messages"><div class="panel-head"><div><span class="eyebrow">NOTIFICATIONS</span><h2>Latest matches</h2></div><button class="text-button" id="markRead">Mark all read</button></div><div class="alerts"><article><div class="alert-icon">K</div><div><strong>96% match · Studio Kivu</strong><p>New website redesign opportunity detected.</p><small>8 min ago</small></div><b>NEW</b></article><article><div class="alert-icon green">M</div><div><strong>91% match · Maison M</strong><p>Restaurant group looking for a digital partner.</p><small>24 min ago</small></div><b>NEW</b></article><article><div class="alert-icon blue">N</div><div><strong>87% match · Nexum Agency</strong><p>Marketing design brief detected.</p><small>1 h ago</small></div></article></div></section>
+
+      <section class="settings panel" id="settings"><div class="panel-head"><div><span class="eyebrow">SETTINGS</span><h2>Your preferences</h2></div></div><div class="setting-row"><div><strong>Auto-Match alerts</strong><small>Notify me when Nexora detects a strong opportunity.</small></div><button class="toggle on"><span></span></button></div><div class="setting-row"><div><strong>Dark workspace</strong><small>Nexora's AI workspace appearance.</small></div><span class="setting-value">ON</span></div></section>
+    </section>
+  </main>
+</div>
+<div class="loading-overlay hidden" id="searchLoading" aria-live="polite"><div class="loader-orb"><span></span><span></span><span></span></div><span class="eyebrow">NEXORA AI</span><h2 id="searchLoadingTitle">Analyse de votre recherche...</h2><p id="searchLoadingText">Compréhension de la demande et analyse des signaux d’opportunité.</p><div class="search-progress-wrap"><div class="search-progress"><i id="searchProgressBar"></i></div><strong id="searchProgressLabel">0%</strong></div><div class="loader-steps"><span id="searchStep1">✓ Lecture de la demande</span><span id="searchStep2">○ Scan des opportunités</span><span id="searchStep3">○ Comparaison des profils</span><span id="searchStep4">○ Classement des meilleurs matchs</span></div><button class="cancel-search overlay-cancel" id="cancelFindButton" type="button">Annuler la recherche</button></div>
+<script src="platform.js?v=20260821-3"></script>
+</body>
+</html>
