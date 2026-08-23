@@ -14,8 +14,8 @@
   function profileCandidates(profile,query=''){
     const engine=window.NexoraMatching;
     if(!engine?.catalog?.length)return [];
-    let candidates=query ? (engine.matches(query)||[]) : engine.catalog.slice();
     const category=engine.categoryForProfile?.();
+    let candidates=query ? (engine.matches(query)||[]) : engine.catalog.slice();
     if(category)candidates=candidates.filter(p=>p.category===category);
     return candidates;
   }
@@ -53,33 +53,61 @@
   },250);
   const stored=getJSON('nexoraPreparedMatches',[]);if(stored.length)installPreparedMatcher(stored);
 
-  // Find: first restrict by the user's typed request and profile category, then let OpenAI rank only those candidates.
-  document.addEventListener('click',async e=>{
-    const btn=e.target.closest?.('#findButton,#quickFind');
-    if(!btn)return;
+  function replaceFindButtons(){
+    ['findButton','quickFind'].forEach(id=>{
+      const old=document.getElementById(id);if(!old||old.dataset.nexoraAiBound)return;
+      const btn=old.cloneNode(true);old.replaceWith(btn);btn.dataset.nexoraAiBound='1';btn.addEventListener('click',()=>runFind(btn));
+    });
+  }
+
+  function setLoading(overlay,pct,stage){
+    if(!overlay)return;
+    overlay.classList.remove('hidden');
+    let box=overlay.querySelector('.nx-ai-progress');
+    if(!box){box=document.createElement('div');box.className='nx-ai-progress';box.style.cssText='width:min(520px,88vw);margin-top:18px';box.innerHTML='<div style="display:flex;justify-content:space-between;font:700 14px DM Sans"><span id="nxAiStage">Analyse de votre demande…</span><b id="nxAiPct">0%</b></div><div style="height:8px;background:#e7eaf0;border-radius:99px;margin:10px 0 16px;overflow:hidden"><i id="nxAiBar" style="display:block;width:0;height:100%;background:#111827;border-radius:99px"></i></div><div style="display:grid;gap:7px;text-align:left;font:600 13px DM Sans;color:#687287"><span>✓ Profil Nexora pris en compte</span><span>✓ Recherche et intentions analysées</span><span>✓ Prospects compatibles comparés</span></div>';overlay.appendChild(box)}
+    const bar=box.querySelector('#nxAiBar'),p=box.querySelector('#nxAiPct'),s=box.querySelector('#nxAiStage');if(bar)bar.style.width=pct+'%';if(p)p.textContent=pct+'%';if(s)s.textContent=stage;
+  }
+
+  async function runFind(btn){
     const input=document.getElementById('findInput');
     const query=input?.value?.trim()||'';
     const profile=getJSON('nexoraProfile',{});
+    if(!query){input?.focus();return;}
+    const overlay=document.getElementById('searchLoading');
     const candidates=profileCandidates(profile,query);
-    if(!query||!candidates.length)return;
-    try{
-      const matches=await rank(profile,query,candidates);
+    if(!candidates.length){
+      if(overlay){overlay.classList.remove('hidden');setLoading(overlay,100,'Aucun prospect compatible avec votre profil et cette recherche.');setTimeout(()=>overlay.classList.add('hidden'),1600)}
+      return;
+    }
+    let done=false,ai=[];
+    const started=Date.now();
+    setLoading(overlay,2,'Analyse de votre demande…');
+    const progress=setInterval(()=>{const elapsed=Date.now()-started;const pct=Math.min(94,Math.floor(elapsed/15000*94));let stage='Analyse de votre demande…';if(elapsed>=3500&&elapsed<7000)stage='Recherche des opportunités compatibles…';else if(elapsed>=7000&&elapsed<10500)stage='Comparaison des profils…';else if(elapsed>=10500)stage='Classement des meilleurs matchs…';setLoading(overlay,pct,stage)},200);
+    try{ai=await rank(profile,query,candidates)}catch(e){console.warn('Nexora AI Find unavailable',e)}
+    const remaining=Math.max(0,15000-(Date.now()-started));
+    setTimeout(()=>{
+      clearInterval(progress);setLoading(overlay,100,'Recherche terminée — résultats prêts.');
       const byId=new Map(candidates.map(p=>[String(p.id||p.handle||p.name),p]));
-      const prepared=matches.map(m=>{const base=byId.get(String(m.id));return base?{...base,match:`${clamp(m.score)}%`,aiReason:m.reason||''}:null}).filter(Boolean);
-      if(!prepared.length)return;
-      save('nexoraFindMatches',prepared);
-      setTimeout(()=>{
-        const table=document.querySelector('.prospect-table');if(!table)return;
-        table.querySelectorAll('.prospect.find-result').forEach(x=>x.remove());
-        prepared.slice(0,4).forEach((p,i)=>{
-          const row=document.createElement('div');row.className='prospect find-result nexora-ai-result';row.style.cssText='cursor:pointer;animation:nxFindIn .45s ease '+(i*.1)+'s both';
-          row.innerHTML='<div class="person"><div class="person-avatar a1">'+(p.initial||p.name?.[0]||'N')+'</div><div><strong>'+p.handle+'</strong><small>'+p.name+'</small></div></div><span class="source">'+p.source+'</span><p>'+p.need+'</p><b class="match high">'+p.match+'</b><button type="button" class="find-detail">Voir les détails →</button>';
-          const open=()=>window.NexoraOpenProspect?.(i,p);row.onclick=ev=>{if(!ev.target.closest('button'))open()};row.querySelector('.find-detail').onclick=ev=>{ev.stopPropagation();open()};table.appendChild(row);
-        });
-        document.getElementById('prospectEmpty')?.remove();
-      },15800);
-    }catch(err){console.warn('Nexora AI Find unavailable',err)}
-  },true);
+      const prepared=(ai||[]).map(m=>{const base=byId.get(String(m.id));return base?{...base,match:`${clamp(m.score)}%`,aiReason:m.reason||''}:null}).filter(Boolean);
+      const final=prepared.length?prepared:candidates.map(p=>({...p,match:p.match||'0%'}));
+      save('nexoraFindMatches',final);
+      setTimeout(()=>{renderFindResults(final);overlay?.classList.add('hidden')},700);
+    },remaining);
+  }
 
+  function renderFindResults(list){
+    const table=document.querySelector('.prospect-table');if(!table)return;
+    table.querySelectorAll('.prospect.find-result').forEach(x=>x.remove());
+    list.slice(0,5).forEach((p,i)=>{
+      const row=document.createElement('div');row.className='prospect find-result nexora-ai-result';row.style.cssText='cursor:pointer;animation:nxFindIn .45s ease '+(i*.1)+'s both';
+      row.innerHTML='<div class="person"><div class="person-avatar a1">'+(p.initial||p.name?.[0]||'N')+'</div><div><strong>'+p.handle+'</strong><small>'+p.name+'</small></div></div><span class="source">'+p.source+'</span><p>'+p.need+'</p><b class="match high">'+p.match+'</b><button type="button" class="find-detail">Voir les détails →</button>';
+      const open=()=>window.NexoraOpenProspect?.(i,p);row.onclick=ev=>{if(!ev.target.closest('button'))open()};row.querySelector('.find-detail').onclick=ev=>{ev.stopPropagation();open()};table.appendChild(row);
+    });
+    document.getElementById('prospectEmpty')?.remove();
+    const count=document.getElementById('prospectsCount');if(count)count.textContent=String(list.length);
+    const view=window.location.hash?.replace('#','');if(view!=='find')document.querySelector('.nav-item[href="#prospects"]')?.click();
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',replaceFindButtons);else replaceFindButtons();
   window.NexoraPrepareQuizMatches=prepareQuizMatches;
 })();
