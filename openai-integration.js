@@ -53,13 +53,6 @@
   },250);
   const stored=getJSON('nexoraPreparedMatches',[]);if(stored.length)installPreparedMatcher(stored);
 
-  function replaceFindButtons(){
-    ['findButton','quickFind'].forEach(id=>{
-      const old=document.getElementById(id);if(!old||old.dataset.nexoraAiBound)return;
-      const btn=old.cloneNode(true);old.replaceWith(btn);btn.dataset.nexoraAiBound='1';btn.addEventListener('click',()=>runFind(btn));
-    });
-  }
-
   function setLoading(overlay,pct,stage){
     if(!overlay)return;
     overlay.classList.remove('hidden');
@@ -79,7 +72,7 @@
       if(overlay){overlay.classList.remove('hidden');setLoading(overlay,100,'Aucun prospect compatible avec votre profil et cette recherche.');setTimeout(()=>overlay.classList.add('hidden'),1600)}
       return;
     }
-    let done=false,ai=[];
+    let ai=[];
     const started=Date.now();
     setLoading(overlay,2,'Analyse de votre demande…');
     const progress=setInterval(()=>{const elapsed=Date.now()-started;const pct=Math.min(94,Math.floor(elapsed/15000*94));let stage='Analyse de votre demande…';if(elapsed>=3500&&elapsed<7000)stage='Recherche des opportunités compatibles…';else if(elapsed>=7000&&elapsed<10500)stage='Comparaison des profils…';else if(elapsed>=10500)stage='Classement des meilleurs matchs…';setLoading(overlay,pct,stage)},200);
@@ -105,9 +98,16 @@
     });
     document.getElementById('prospectEmpty')?.remove();
     const count=document.getElementById('prospectsCount');if(count)count.textContent=String(list.length);
-    const view=window.location.hash?.replace('#','');if(view!=='find')document.querySelector('.nav-item[href="#prospects"]')?.click();
+    document.querySelector('.nav-item[href="#prospects"]')?.click();
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',replaceFindButtons);else replaceFindButtons();
+  /* Intercept Find before the legacy demo handler. The document capture phase runs before the button's handler. */
+  document.addEventListener('click',function(e){
+    const btn=e.target.closest?.('#findButton,#quickFind');
+    if(!btn)return;
+    e.preventDefault();e.stopImmediatePropagation();runFind(btn);
+  },true);
+
+  const stored=getJSON('nexoraPreparedMatches',[]);if(stored.length)installPreparedMatcher(stored);
   window.NexoraPrepareQuizMatches=prepareQuizMatches;
 })();
