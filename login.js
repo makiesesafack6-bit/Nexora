@@ -1,41 +1,15 @@
 const loginCard=document.getElementById('loginCard');
 const loaderCard=document.getElementById('loaderCard');
-function proceed(provider='email'){
-  const existing=JSON.parse(localStorage.getItem('nexoraAccount')||'{}');
-  if(provider==='email'){
-    const email=document.getElementById('loginEmail').value.trim();
-    localStorage.setItem('nexoraAccount',JSON.stringify({...existing,email:email||existing.email||'demo@nexora.local',provider:'email',signedIn:true}));
-  }else{
-    localStorage.setItem('nexoraAccount',JSON.stringify({...existing,name:existing.name||`${provider} User`,email:existing.email||`demo-${provider.toLowerCase()}@nexora.local`,provider:provider.toLowerCase(),signedIn:true,demo:true}));
-  }
-  loginCard.classList.add('hidden');
-  loaderCard.classList.remove('hidden');
-  const loaderText=document.getElementById('loginLoaderText');
-  const status=document.getElementById('loginStatus');
-  const steps=[
-    ['Vérification de votre espace Nexora.','Vérification du compte…'],
-    ['Récupération de votre profil et de vos préférences.','Profil et préférences…'],
-    ['Analyse de votre espace personnalisé.','Analyse Nexora AI…'],
-    ['Recherche de la configuration adaptée à votre profil.','Configuration du workspace…'],
-    ['Préparation de votre workspace personnalisé.','Workspace presque prêt…'],
-    ['Synchronisation finale de votre espace Nexora.','Synchronisation finale…']
-  ];
-  const minimumDuration=15000;
-  const startedAt=Date.now();
-  let i=0;
-  const tick=()=>{
-    if(i<steps.length){
-      loaderText.textContent=steps[i][0];
-      status.textContent=steps[i][1];
-      i++;
-      setTimeout(tick,2500);
-      return;
-    }
-    const remaining=Math.max(0,minimumDuration-(Date.now()-startedAt));
-    setTimeout(()=>{status.textContent='✓ Espace prêt';loaderText.textContent='Votre espace Nexora est prêt.';setTimeout(()=>{window.location.href='platform.html';},350);},remaining);
-  };
-  tick();
-}
-document.getElementById('loginForm')?.addEventListener('submit',e=>{e.preventDefault();proceed('email');});
-document.getElementById('googleLogin')?.addEventListener('click',()=>proceed('Google'));
-document.getElementById('appleLogin')?.addEventListener('click',()=>proceed('Apple'));
+const phoneLogin=document.getElementById('phoneLogin');
+const otpLogin=document.getElementById('otpLogin');
+const savedSession=document.getElementById('savedSession');
+const account=JSON.parse(localStorage.getItem('nexoraAccount')||'null');
+const sessionActive=localStorage.getItem('nexoraSession')==='active';
+if(account&&sessionActive){document.getElementById('savedName').textContent=`Bienvenue, ${account.firstName||account.name||account.username||'sur Nexora'} 👋`;document.getElementById('savedMeta').textContent=`${account.username||account.phone||''} · session enregistrée sur cet appareil`;savedSession.classList.remove('hidden');}
+document.getElementById('continueSession')?.addEventListener('click',()=>{if(account){account.signedIn=true;localStorage.setItem('nexoraAccount',JSON.stringify(account));startLoading();}});
+document.getElementById('changeAccount')?.addEventListener('click',()=>{savedSession.classList.add('hidden');localStorage.removeItem('nexoraSession');phoneLogin.classList.remove('hidden');});
+let selectedChannel='sms';
+document.querySelectorAll('.channel').forEach(btn=>btn.addEventListener('click',()=>{selectedChannel=btn.dataset.channel;document.getElementById('loginChannel').value=selectedChannel;document.querySelectorAll('.channel').forEach(b=>b.classList.toggle('active',b===btn));}));
+document.getElementById('loginForm')?.addEventListener('submit',e=>{e.preventDefault();const phone=document.getElementById('loginPhone').value.trim();const stored=JSON.parse(localStorage.getItem('nexoraAccount')||'null');if(!stored||stored.phone!==phone){document.getElementById('loginPhone').setCustomValidity('Aucun compte Nexora correspondant à ce numéro sur cet appareil.');document.getElementById('loginPhone').reportValidity();return}document.getElementById('loginPhone').setCustomValidity('');const otp=String(Math.floor(100000+Math.random()*900000));sessionStorage.setItem('nexoraLoginOtp',otp);sessionStorage.setItem('nexoraLoginPhone',phone);phoneLogin.classList.add('hidden');otpLogin.classList.remove('hidden');document.getElementById('loginOtpNote').textContent=`Mode prototype : aucun ${selectedChannel==='whatsapp'?'WhatsApp':'SMS'} réel n'est envoyé. Code de test : ${otp}.`;document.getElementById('loginOtp').focus();});
+document.getElementById('loginOtpForm')?.addEventListener('submit',e=>{e.preventDefault();const code=document.getElementById('loginOtp').value.trim();const expected=sessionStorage.getItem('nexoraLoginOtp');if(code!==expected){document.getElementById('loginOtp').setCustomValidity('Code incorrect');document.getElementById('loginOtp').reportValidity();return}document.getElementById('loginOtp').setCustomValidity('');const current=JSON.parse(localStorage.getItem('nexoraAccount')||'{}');localStorage.setItem('nexoraAccount',JSON.stringify({...current,signedIn:true}));localStorage.setItem('nexoraSession','active');sessionStorage.removeItem('nexoraLoginOtp');sessionStorage.removeItem('nexoraLoginPhone');startLoading();});
+function startLoading(){loginCard.classList.add('hidden');loaderCard.classList.remove('hidden');const loaderText=document.getElementById('loginLoaderText');const status=document.getElementById('loginStatus');const steps=[['Vérification de votre espace Nexora.','Vérification du compte…'],['Récupération de votre profil et de vos préférences.','Profil et préférences…'],['Analyse de votre espace personnalisé.','Analyse Nexora AI…'],['Recherche de la configuration adaptée à votre profil.','Configuration du workspace…'],['Préparation de votre workspace personnalisé.','Workspace presque prêt…'],['Synchronisation finale de votre espace Nexora.','Synchronisation finale…']];const minimumDuration=15000;const startedAt=Date.now();let i=0;const tick=()=>{if(i<steps.length){loaderText.textContent=steps[i][0];status.textContent=steps[i][1];i++;setTimeout(tick,2500);return}const remaining=Math.max(0,minimumDuration-(Date.now()-startedAt));setTimeout(()=>{status.textContent='✓ Espace prêt';loaderText.textContent='Votre espace Nexora est prêt.';setTimeout(()=>{window.location.href='platform.html';},350)},remaining)};tick();}
