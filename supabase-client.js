@@ -6,7 +6,7 @@
     if (accountProfileLoaded || !document.querySelector('.top-user, .side-user')) return;
     accountProfileLoaded = true;
     const script = document.createElement('script');
-    script.src = '/account-profile.js?v=20260830-1';
+    script.src = '/account-profile.js?v=20260830-2';
     script.async = true;
     script.onerror = () => console.warn('[Nexora] account profile UI unavailable.');
     document.head.appendChild(script);
@@ -60,4 +60,5 @@
   }
 
   window.NexoraSupabase = { getClient, ensureSession };
+  setTimeout(loadAccountProfile, 0);
 })();
