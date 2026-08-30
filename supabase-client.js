@@ -1,8 +1,22 @@
 (function () {
   let clientPromise = null;
+  let accountProfileLoaded = false;
+
+  function loadAccountProfile() {
+    if (accountProfileLoaded || !document.querySelector('.top-user, .side-user')) return;
+    accountProfileLoaded = true;
+    const script = document.createElement('script');
+    script.src = '/account-profile.js?v=20260830-1';
+    script.async = true;
+    script.onerror = () => console.warn('[Nexora] account profile UI unavailable.');
+    document.head.appendChild(script);
+  }
 
   async function getClient() {
-    if (window.supabase && window.NexoraSupabaseClient) return window.NexoraSupabaseClient;
+    if (window.supabase && window.NexoraSupabaseClient) {
+      loadAccountProfile();
+      return window.NexoraSupabaseClient;
+    }
 
     if (!clientPromise) {
       clientPromise = (async () => {
@@ -27,6 +41,7 @@
           }
         });
         window.NexoraSupabaseClient = client;
+        loadAccountProfile();
         return client;
       })();
     }
