@@ -7,9 +7,6 @@
   }
 
   async function saveProfileFromForm() {
-    const form = document.getElementById('accountForm');
-    if (!form) return;
-
     const { client, session } = await getClientAndSession();
     const value = id => document.getElementById(id)?.value?.trim() || null;
     const profile = {
@@ -38,11 +35,29 @@
 
     const { client, session } = await getClientAndSession();
     const answers = JSON.parse(raw);
+    const payload = { profile_id: session.user.id, answers };
 
-    const { error: quizError } = await client.from('quiz_profiles').upsert({
-      profile_id: session.user.id,
-      answers
-    }, { onConflict: 'profile_id' });
+    // Avoid depending on a UNIQUE constraint on profile_id in an existing table.
+    const { data: existing, error: lookupError } = await client
+      .from('quiz_profiles')
+      .select('profile_id')
+      .eq('profile_id', session.user.id)
+      .maybeSingle();
+    if (lookupError) throw lookupError;
+
+    let quizError = null;
+    if (existing) {
+      const result = await client
+        .from('quiz_profiles')
+        .update({ answers })
+        .eq('profile_id', session.user.id);
+      quizError = result.error;
+    } else {
+      const result = await client
+        .from('quiz_profiles')
+        .insert(payload);
+      quizError = result.error;
+    }
     if (quizError) throw quizError;
 
     const { error: profileError } = await client
