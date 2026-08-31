@@ -25,7 +25,6 @@
 
     const { error } = await client.from('profiles').upsert(profile, { onConflict: 'id' });
     if (error) throw error;
-
     localStorage.setItem('nexoraSupabaseUserId', session.user.id);
   }
 
@@ -35,35 +34,34 @@
 
     const { client, session } = await getClientAndSession();
     const answers = JSON.parse(raw);
-    const payload = { profile_id: session.user.id, answers };
+    const profileId = session.user.id;
 
-    // Avoid depending on a UNIQUE constraint on profile_id in an existing table.
-    const { data: existing, error: lookupError } = await client
+    // Look up at most one existing row. This also works if the existing
+    // database table does not have a UNIQUE constraint on profile_id.
+    const { data: rows, error: lookupError } = await client
       .from('quiz_profiles')
       .select('profile_id')
-      .eq('profile_id', session.user.id)
-      .maybeSingle();
+      .eq('profile_id', profileId)
+      .limit(1);
     if (lookupError) throw lookupError;
 
-    let quizError = null;
-    if (existing) {
-      const result = await client
+    if (rows && rows.length > 0) {
+      const { error } = await client
         .from('quiz_profiles')
         .update({ answers })
-        .eq('profile_id', session.user.id);
-      quizError = result.error;
+        .eq('profile_id', profileId);
+      if (error) throw error;
     } else {
-      const result = await client
+      const { error } = await client
         .from('quiz_profiles')
-        .insert(payload);
-      quizError = result.error;
+        .insert({ profile_id: profileId, answers });
+      if (error) throw error;
     }
-    if (quizError) throw quizError;
 
     const { error: profileError } = await client
       .from('profiles')
       .update({ profile_complete: true })
-      .eq('id', session.user.id);
+      .eq('id', profileId);
     if (profileError) throw profileError;
   }
 
