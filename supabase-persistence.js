@@ -34,7 +34,7 @@
 
   async function saveQuizProfile() {
     const raw = localStorage.getItem('nexoraProfile');
-    if (!raw) return;
+    if (!raw) throw new Error('Quiz answers are missing.');
 
     const { client, session } = await getClientAndSession();
     const answers = JSON.parse(raw);
@@ -53,25 +53,4 @@
   }
 
   window.NexoraSupabasePersistence = { saveProfileFromForm, saveQuizProfile };
-
-  document.getElementById('accountForm')?.addEventListener('submit', async () => {
-    try {
-      await saveProfileFromForm();
-    } catch (error) {
-      console.error('[Nexora] Supabase profile sync failed:', error);
-    }
-  });
-
-  document.getElementById('nextButton')?.addEventListener('click', async () => {
-    const button = document.getElementById('nextButton');
-    if (button?.textContent?.includes('Terminer mon profil')) {
-      setTimeout(async () => {
-        try {
-          await saveQuizProfile();
-        } catch (error) {
-          console.error('[Nexora] Supabase quiz sync failed:', error);
-        }
-      }, 100);
-    }
-  });
 })();
