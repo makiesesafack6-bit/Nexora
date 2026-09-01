@@ -1,0 +1,36 @@
+/* Nexora Tech UI — visual layer only. Keep platform.css functionality intact. */
+:root{--nx-bg:#05070d;--nx-panel:#0b101a;--nx-panel-2:#0d1421;--nx-border:rgba(115,145,255,.18);--nx-text:#eef3ff;--nx-muted:#8b97ad;--nx-blue:#5f7cff;--nx-violet:#9b6cff;--nx-cyan:#48d7ff;--nx-green:#3fe0a1}
+html,body{background:var(--nx-bg)!important;color:var(--nx-text)!important}
+body{overflow-x:hidden;background-image:radial-gradient(circle at 15% 10%,rgba(95,124,255,.10),transparent 28%),radial-gradient(circle at 85% 20%,rgba(155,108,255,.08),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,auto,42px 42px,42px 42px}
+body::before{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:0;background:radial-gradient(circle at 50% 50%,rgba(70,125,255,.06),transparent 40%);animation:nxPulse 8s ease-in-out infinite alternate}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:linear-gradient(115deg,transparent 0 42%,rgba(72,215,255,.045) 46%,transparent 50%),linear-gradient(295deg,transparent 0 44%,rgba(155,108,255,.035) 48%,transparent 52%);background-size:260% 260%;animation:nxSweep 14s linear infinite}
+.app-shell,.main,.content{position:relative;z-index:1}
+.sidebar{background:linear-gradient(180deg,rgba(7,10,17,.97),rgba(7,10,17,.94))!important;border-right:1px solid var(--nx-border)!important;box-shadow:18px 0 40px rgba(0,0,0,.18)}
+.brand{color:#fff!important}.logo{background:linear-gradient(135deg,#213d9a,#7b4cff)!important;box-shadow:0 0 28px rgba(95,124,255,.35)!important}
+.plan-card,.stats article,.automation,.panel,.campaign-card,.profile-panel{background:linear-gradient(180deg,rgba(14,20,32,.90),rgba(8,13,22,.92))!important;border:1px solid var(--nx-border)!important;color:var(--nx-text)!important;box-shadow:0 14px 40px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025)}
+.plan-label,.eyebrow,.stats span,.stats small,.heading-row p,.auto-copy p,.scan,.campaign-card>p,.profile-mini small,.profile-progress,.notifications-panel,.setting-row small{color:var(--nx-muted)!important}
+.nav-item{color:#98a4bb!important}.nav-item:hover,.nav-item.active{background:linear-gradient(90deg,rgba(95,124,255,.14),rgba(155,108,255,.06))!important;color:#fff!important;box-shadow:inset 2px 0 0 var(--nx-blue)}
+.ai-mini{border-color:var(--nx-border)!important}.pulse{background:var(--nx-green)!important;box-shadow:0 0 0 4px rgba(63,224,161,.10),0 0 16px rgba(63,224,161,.45)!important}
+.topbar{background:rgba(5,8,14,.84)!important;border-bottom:1px solid var(--nx-border)!important;backdrop-filter:blur(16px)}
+.top-user strong,.side-user strong,.panel-head h2,.campaign-card h2,.search-title h2,.heading-row h1,.stats strong{color:#f4f7ff!important}
+.primary-action,.search-row button,.campaign-card button{background:linear-gradient(135deg,#4d64ff,#8e55ff)!important;border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 0 28px rgba(95,124,255,.25),0 10px 25px rgba(0,0,0,.20)!important;color:#fff!important}
+.primary-action:hover,.search-row button:hover,.campaign-card button:hover{transform:translateY(-1px);filter:brightness(1.08)}
+.search-card{position:relative;overflow:hidden;background:linear-gradient(135deg,#080d18,#0c1220 55%,#120b1f)!important;border:1px solid rgba(95,124,255,.24);box-shadow:0 18px 60px rgba(0,0,0,.30),0 0 55px rgba(95,124,255,.10)}
+.search-card::before{content:"";position:absolute;inset:auto -15% -55% auto;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(72,215,255,.20),transparent 58%);filter:blur(20px);animation:nxOrb 7s ease-in-out infinite}
+.search-card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 0 35%,rgba(255,255,255,.035) 47%,transparent 58%);background-size:240% 100%;animation:nxShimmer 7s linear infinite;pointer-events:none}
+.search-title,.search-row,.chips{position:relative;z-index:2}
+.search-row{background:rgba(255,255,255,.96)!important;box-shadow:0 0 0 1px rgba(95,124,255,.20),0 14px 35px rgba(0,0,0,.18)}
+.search-row input{color:#141925!important}.chips button{background:rgba(255,255,255,.035)!important;border-color:rgba(125,145,255,.18)!important;color:#b6c2da!important}
+.ai-pill{border-color:rgba(95,124,255,.22)!important;background:rgba(95,124,255,.06)}
+.automation{position:relative;overflow:hidden}.automation::before{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,transparent,var(--nx-cyan),var(--nx-violet),transparent);background-size:200% 100%;animation:nxLine 4s linear infinite}
+.auto-icon{background:linear-gradient(135deg,rgba(95,124,255,.18),rgba(155,108,255,.12))!important;color:#b9bfff!important;box-shadow:0 0 24px rgba(95,124,255,.15)}
+.panel,.campaign-card,.profile-panel{backdrop-filter:blur(12px)}
+.prospect-table{border-color:rgba(115,145,255,.12)!important}.table-head{background:rgba(255,255,255,.025)!important;color:#77849c!important}.prospect{border-color:rgba(115,145,255,.10)!important}.prospect:hover{background:rgba(95,124,255,.05);box-shadow:inset 0 0 0 1px rgba(95,124,255,.10)}
+.match.high{background:rgba(63,224,161,.10)!important;color:#63e8b6!important;border:1px solid rgba(63,224,161,.16)}.match.medium{background:rgba(255,191,71,.10)!important;color:#ffd071!important;border:1px solid rgba(255,191,71,.14)}
+.campaign-card input,.campaign-card select{background:rgba(255,255,255,.035)!important;color:#e8eeff!important;border-color:rgba(115,145,255,.16)!important}.campaign-card input::placeholder{color:#627089}
+.profile-avatar,.alert-icon{background:linear-gradient(135deg,#18275e,#17213b)!important;color:#dfe6ff!important;border:1px solid rgba(95,124,255,.18)}
+.loading-overlay{background:rgba(3,5,10,.97)!important}.loading-overlay::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at center,rgba(95,124,255,.11),transparent 38%),linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:auto,34px 34px,34px 34px;animation:nxGrid 8s linear infinite}
+.loading-overlay>*{position:relative;z-index:2}.loader-orb span{border-color:rgba(95,124,255,.58)!important;box-shadow:0 0 22px rgba(95,124,255,.12)}.loader-orb::after{background:linear-gradient(135deg,#4d64ff,#9b6cff)!important;color:#fff!important;box-shadow:0 0 55px rgba(95,124,255,.38)!important}
+.settings{margin-top:16px}.setting-row{border-color:rgba(115,145,255,.10)!important}
+@keyframes nxPulse{from{transform:scale(.96);opacity:.65}to{transform:scale(1.04);opacity:1}}@keyframes nxSweep{0%{background-position:120% 0,80% 0}100%{background-position:-120% 0,-80% 0}}@keyframes nxOrb{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-45px,-35px,0) scale(1.08)}}@keyframes nxShimmer{to{background-position:-240% 0}}@keyframes nxLine{to{background-position:200% 0}}@keyframes nxGrid{to{transform:translate3d(34px,34px,0)}}
+@media(prefers-reduced-motion:reduce){body::before,body::after,.search-card::before,.search-card::after,.automation::before,.loading-overlay::before{animation:none!important}}
