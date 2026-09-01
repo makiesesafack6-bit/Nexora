@@ -22,7 +22,7 @@ function buildQuestions(role='Autre'){const f=roleFlows[role]||roleFlows.Autre;r
 let questions=buildQuestions('Autre');
 const state={step:0,answers:{}};
 const introStep=document.getElementById('introStep'),accountCard=document.getElementById('accountCard'),loadingCard=document.getElementById('loadingCard'),quizCard=document.getElementById('quizCard'),analysisCard=document.getElementById('analysisCard');
-const startButton=document.getElementById('startButton'),accountForm=document.getElementById('accountForm'),nextButton=document.getElementById('nextButton'),backButton=document.getElementById('backButton');
+const startButton=document.getElementById('startButton'),nextButton=document.getElementById('nextButton'),backButton=document.getElementById('backButton');
 const stepLabel=document.getElementById('stepLabel'),percentLabel=document.getElementById('percentLabel'),progressBar=document.getElementById('progressBar'),questionTitle=document.getElementById('questionTitle'),questionNote=document.getElementById('questionNote'),optionsWrap=document.getElementById('options');
 const transition=(hideEl,showEl)=>{hideEl?.classList.add('hidden');showEl?.classList.remove('hidden')};
 const readAccountForm=()=>({
@@ -38,20 +38,8 @@ const readAccountForm=()=>({
 });
 const saveAccount=a=>{localStorage.setItem('nexoraAccount',JSON.stringify(a));localStorage.setItem('nexoraSession','active')};
 startButton?.addEventListener('click',()=>transition(introStep,accountCard));
-accountForm?.addEventListener('submit',async e=>{
- e.preventDefault();
- const account=readAccountForm();
- try{
-  if(window.NexoraSupabasePersistence?.saveProfileFromForm){await window.NexoraSupabasePersistence.saveProfileFromForm();}
-  saveAccount({...account,provider:'phone',profileComplete:false,createdAt:new Date().toISOString()});
-  beginLoading();
- }catch(error){
-  console.error('[Nexora] Account save failed:',error);
-  const note=document.querySelector('.account-note');
-  if(note) note.textContent='Impossible d’enregistrer votre compte pour le moment. Vérifiez la connexion à Supabase puis réessayez.';
- }
-});
-function beginLoading(){transition(accountCard,loadingCard);const title=document.getElementById('loadingTitle'),text=document.getElementById('loadingText'),s1=document.getElementById('loadStep1'),s2=document.getElementById('loadStep2'),s3=document.getElementById('loadStep3');title.textContent='Préparation de votre espace…';text.textContent='Compte enregistré. Nous préparons le quiz Nexora.';s1.classList.add('active');setTimeout(()=>{s1.classList.remove('active');s1.classList.add('done');s2.classList.add('active');title.textContent='Chargement du quiz…';text.textContent='Nous préparons un parcours adapté à votre activité.'},5000);setTimeout(()=>{s2.classList.remove('active');s2.classList.add('done');s3.classList.add('active');title.textContent='Votre espace est prêt à être personnalisé';text.textContent='Encore une étape : répondre au quiz.'},10000);setTimeout(()=>{transition(loadingCard,quizCard);renderQuestion()},15000)}
+function beginLoading(){transition(accountCard,loadingCard);const title=document.getElementById('loadingTitle'),text=document.getElementById('loadingText'),s1=document.getElementById('loadStep1'),s2=document.getElementById('loadStep2'),s3=document.getElementById('loadStep3');title.textContent='Préparation de votre espace…';text.textContent='Compte vérifié. Nous préparons le quiz Nexora.';s1.classList.add('active');setTimeout(()=>{s1.classList.remove('active');s1.classList.add('done');s2.classList.add('active');title.textContent='Chargement du quiz…';text.textContent='Nous préparons un parcours adapté à votre activité.'},1400);setTimeout(()=>{s2.classList.remove('active');s2.classList.add('done');s3.classList.add('active');title.textContent='Votre espace est prêt à être personnalisé';text.textContent='Encore une étape : répondre au quiz.'},2800);setTimeout(()=>{transition(loadingCard,quizCard);renderQuestion()},4200)}
+window.NexoraReadAccountForm=readAccountForm;window.NexoraSaveAccount=saveAccount;window.NexoraBeginLoading=beginLoading;
 function renderQuestion(){const q=questions[state.step],selected=state.answers[q.key],pct=Math.round(((state.step+1)/questions.length)*100);stepLabel.textContent=`Étape ${state.step+1} sur ${questions.length}`;percentLabel.textContent=`${pct}%`;progressBar.style.width=`${pct}%`;questionTitle.textContent=q.title;questionNote.textContent=q.note;optionsWrap.innerHTML='';q.options.forEach(label=>{const button=document.createElement('button');button.className='option'+(selected===label?' selected':'');button.type='button';button.innerHTML=`<span>${label}</span><span>${selected===label?'✓':'›'}</span>`;button.addEventListener('click',()=>{state.answers[q.key]=label;if(q.key==='role'){questions=buildQuestions(label);Object.keys(state.answers).filter(k=>k!=='role').forEach(k=>delete state.answers[k]);state.step=0}renderQuestion()});optionsWrap.appendChild(button)});backButton.style.visibility=state.step===0?'hidden':'visible';nextButton.textContent=state.step===questions.length-1?'Terminer mon profil →':'Continuer →'}
 backButton?.addEventListener('click',()=>{if(state.step>0){state.step-=1;renderQuestion()}});
 nextButton?.addEventListener('click',async()=>{const q=questions[state.step];if(!state.answers[q.key]){nextButton.textContent='Choisissez une réponse';setTimeout(renderQuestion,1300);return}if(state.step<questions.length-1){state.step+=1;renderQuestion();return}await finishProfile()});
@@ -63,9 +51,10 @@ async function finishProfile(){
   localStorage.setItem('nexoraAccount',JSON.stringify({...account,profileComplete:true,signedIn:true}));
  }catch(error){
   console.error('[Nexora] Quiz save failed:',error);
-  nextButton.textContent='Erreur d’enregistrement — réessayez';
+  const message=error?.message||error?.details||'Erreur inconnue';
+  nextButton.textContent=`Enregistrement impossible (${message.slice(0,80)})`;
   return;
  }
  transition(quizCard,analysisCard);runAnalysis();
 }
-function runAnalysis(){const title=document.getElementById('analysisTitle'),text=document.getElementById('analysisText'),s2=document.getElementById('analysis2'),s3=document.getElementById('analysis3');title.textContent='Analyse de votre profil…';text.textContent='Toutes vos réponses sont enregistrées et Nexora prépare vos critères de matching.';setTimeout(()=>{s2.textContent='✓ Activité, compétences, secteur et service analysés';title.textContent='Votre profil est compris.';text.textContent='Nexora construit votre modèle de recherche à partir de toutes vos réponses.'},4000);setTimeout(()=>{s3.textContent='✓ Critères de recherche personnalisés préparés';title.textContent='Activation du moteur Auto-Match.';text.textContent='Nexora commence à comparer les opportunités compatibles avec votre profil.'},8000);setTimeout(async()=>{title.textContent='Recherche des meilleures opportunités…';text.textContent='Nexora compare les possibilités compatibles avec votre activité et vos objectifs.';try{localStorage.removeItem('nexoraPreparedMatches');localStorage.removeItem('nexoraAIMatchedAt');if(window.NexoraPrepareQuizMatches)await window.NexoraPrepareQuizMatches();}catch(e){console.warn('Quiz AI preparation unavailable',e)}},11000);setTimeout(()=>{title.textContent='Votre espace Nexora est prêt.';text.textContent='Ouverture de votre plateforme…'},13500);setTimeout(()=>{window.location.href='platform.html'},15000)}
+function runAnalysis(){const title=document.getElementById('analysisTitle'),text=document.getElementById('analysisText'),s2=document.getElementById('analysis2'),s3=document.getElementById('analysis3');title.textContent='Analyse de votre profil…';text.textContent='Toutes vos réponses sont enregistrées et Nexora prépare vos critères de matching.';setTimeout(()=>{s2.textContent='✓ Activité, compétences, secteur et service analysés';title.textContent='Votre profil est compris.';text.textContent='Nexora construit votre modèle de recherche à partir de toutes vos réponses.'},1200);setTimeout(()=>{s3.textContent='✓ Critères de recherche personnalisés préparés';title.textContent='Activation du moteur Auto-Match.';text.textContent='Nexora commence à comparer les opportunités compatibles avec votre profil.'},2400);setTimeout(async()=>{title.textContent='Recherche des meilleures opportunités…';text.textContent='Nexora compare les possibilités compatibles avec votre activité et vos objectifs.';try{localStorage.removeItem('nexoraPreparedMatches');localStorage.removeItem('nexoraAIMatchedAt');if(window.NexoraPrepareQuizMatches)await window.NexoraPrepareQuizMatches();}catch(e){console.warn('Quiz AI preparation unavailable',e)}},3600);setTimeout(()=>{title.textContent='Votre espace Nexora est prêt.';text.textContent='Ouverture de votre plateforme…'},4800);setTimeout(()=>{window.location.href='platform.html'},6000)}
