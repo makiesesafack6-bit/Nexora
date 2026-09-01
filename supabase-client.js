@@ -6,7 +6,7 @@
     if (accountProfileLoaded || !document.querySelector('.top-user, .side-user')) return;
     accountProfileLoaded = true;
     const script = document.createElement('script');
-    script.src = '/account-profile.js?v=20260830-2';
+    script.src = '/account-profile.js?v=20260901-1';
     script.async = true;
     script.onerror = () => console.warn('[Nexora] account profile UI unavailable.');
     document.head.appendChild(script);
@@ -54,8 +54,17 @@
     const current = await client.auth.getSession();
     if (current.data?.session) return current.data.session;
 
+    // Anonymous Auth is intentionally optional. Do not block the onboarding
+    // UI with an "Anonymous sign-ins are disabled" error. A real phone/email
+    // provider can create the authenticated session later.
     const result = await client.auth.signInAnonymously();
-    if (result.error) throw result.error;
+    if (result.error) {
+      const message = String(result.error.message || '').toLowerCase();
+      if (message.includes('anonymous sign-ins are disabled') || message.includes('anonymous sign-ins')) {
+        return null;
+      }
+      throw result.error;
+    }
     return result.data.session;
   }
 
