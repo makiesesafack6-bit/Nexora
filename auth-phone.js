@@ -37,8 +37,7 @@
     document.getElementById('otpInput').setCustomValidity('');
 
     try{
-      // The account is persisted only after OTP verification. This avoids the
-      // old race where onboarding.js and auth-phone.js handled the same form.
+      // Persist the verified account only after successful OTP verification.
       if(window.NexoraSupabasePersistence?.saveProfileFromForm){
         await window.NexoraSupabasePersistence.saveProfileFromForm();
       }
@@ -51,7 +50,14 @@
     }catch(error){
       console.error('[Nexora] Supabase profile save failed after OTP:',error);
       const note=document.getElementById('otpDemoNote');
-      if(note)note.textContent=`Impossible d’enregistrer le compte : ${String(error?.message||'erreur inconnue').slice(0,120)}`;
+      const message=String(error?.message||'erreur inconnue');
+      // Phone is intentionally unique in the database. Do not silently
+      // overwrite another profile when the same number is used again.
+      if(error?.code==='23505' || /profiles_phone_key|duplicate key value/i.test(message)){
+        if(note)note.textContent='Ce numéro est déjà associé à un compte Nexora. Utilisez Connexion pour retrouver ce compte, ou un autre numéro pour créer un nouveau compte.';
+      }else if(note){
+        note.textContent=`Impossible d’enregistrer le compte : ${message.slice(0,160)}`;
+      }
       return;
     }
 
