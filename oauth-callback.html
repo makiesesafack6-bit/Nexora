@@ -17,13 +17,20 @@
  localStorage.setItem('nexoraAccount',JSON.stringify(account));
  localStorage.setItem('nexoraSession','active');
  localStorage.setItem('nexoraOAuthProvider',account.provider);
- if(account.profileComplete){
+ const params=new URLSearchParams(window.location.search);
+ const flow=params.get('flow')||localStorage.getItem('nexoraOAuthFlow')||'login';
+ localStorage.removeItem('nexoraOAuthFlow');
+ if(flow==='signup'){
+   document.getElementById('title').textContent='Bienvenue sur Nexora.';
+   document.getElementById('text').textContent='Compte Google connecté. Préparation de votre quiz personnalisé…';
+   setTimeout(()=>window.location.href='onboarding.html?oauth=1',900);
+ }else if(account.profileComplete){
    document.getElementById('title').textContent=`Bonjour ${account.firstName||account.name||'Utilisateur'} 👋`;
    document.getElementById('text').textContent='Votre espace Nexora est prêt. Ouverture du dashboard…';
    setTimeout(()=>window.location.href='platform.html',900);
  }else{
-   document.getElementById('title').textContent='Bienvenue sur Nexora.';
-   document.getElementById('text').textContent='Votre compte est créé. Préparation de votre quiz personnalisé…';
+   document.getElementById('title').textContent=`Bonjour ${account.firstName||account.name||'Utilisateur'} 👋`;
+   document.getElementById('text').textContent='Votre profil n’est pas encore terminé. Reprise de votre quiz…';
    setTimeout(()=>window.location.href='onboarding.html?oauth=1',900);
  }
 }catch(error){console.error('[Nexora] OAuth callback failed:',error);document.getElementById('title').textContent='Connexion impossible';document.getElementById('text').textContent=String(error?.message||'Le fournisseur OAuth ou la session est invalide.');setTimeout(()=>location.href='login.html',2500);}})();</script></body></html>
