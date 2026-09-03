@@ -72,7 +72,7 @@ document.getElementById('loginOtpForm')?.addEventListener('submit',async e=>{
   document.getElementById('loginOtp').setCustomValidity('');const current=JSON.parse(localStorage.getItem('nexoraAccount')||'{}');localStorage.setItem('nexoraAccount',JSON.stringify({...current,signedIn:true,verifiedPhone:true}));localStorage.setItem('nexoraSession','active');sessionStorage.removeItem('nexoraLoginOtp');sessionStorage.removeItem('nexoraLoginRealOtp');sessionStorage.removeItem('nexoraLoginPhone');sessionStorage.removeItem('nexoraLoginChannel');startLoading();
 });
 
-async function startOAuth(provider){try{const client=await window.NexoraSupabase.getClient();const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:`${window.location.origin}/oauth-callback.html`}});if(error)throw error;}catch(error){console.error('[Nexora] OAuth error:',error);showMessage(`Connexion ${provider==='google'?'Google':'Apple'} indisponible. Activez le fournisseur dans Supabase Authentication → Providers.`);}}
+async function startOAuth(provider){try{localStorage.setItem('nexoraOAuthFlow','login');const client=await window.NexoraSupabase.getClient();const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:`${window.location.origin}/oauth-callback.html#login`}});if(error)throw error;}catch(error){localStorage.removeItem('nexoraOAuthFlow');console.error('[Nexora] OAuth error:',error);showMessage(`Connexion ${provider==='google'?'Google':'Apple'} indisponible. Activez le fournisseur dans Supabase Authentication → Providers.`);}}
 document.getElementById('googleLogin')?.addEventListener('click',()=>startOAuth('google'));
 document.getElementById('appleLogin')?.addEventListener('click',()=>startOAuth('apple'));
 
