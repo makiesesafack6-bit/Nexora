@@ -18,7 +18,8 @@
  localStorage.setItem('nexoraSession','active');
  localStorage.setItem('nexoraOAuthProvider',account.provider);
  const params=new URLSearchParams(window.location.search);
- const flow=params.get('flow')||localStorage.getItem('nexoraOAuthFlow')||'login';
+ const hashFlow=window.location.hash==='#signup'?'signup':(window.location.hash==='#login'?'login':'');
+ const flow=hashFlow||params.get('flow')||localStorage.getItem('nexoraOAuthFlow')||'login';
  localStorage.removeItem('nexoraOAuthFlow');
  if(flow==='signup'){
    document.getElementById('title').textContent='Bienvenue sur Nexora.';
