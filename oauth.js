@@ -6,12 +6,11 @@
       localStorage.setItem('nexoraOAuthFlow','login');
       sessionStorage.setItem('nexoraOAuthFlow','login');
       const client=await window.NexoraSupabase.getClient();
-      const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:`${window.location.origin}/oauth-callback.html?flow=login`,queryParams:{prompt:'select_account'}}});
-      if(error) throw error;
+      const {error}=await client.auth.signInWithOAuth({provider,options:{redirectTo:`${window.location.origin}/oauth-callback-v2.html?flow=login`,queryParams:{prompt:'select_account'}}});
+      if(error)throw error;
     }catch(error){
       console.error('[Nexora] OAuth sign-in failed:',error);
-      localStorage.removeItem('nexoraOAuthFlow');
-      sessionStorage.removeItem('nexoraOAuthFlow');
+      localStorage.removeItem('nexoraOAuthFlow');sessionStorage.removeItem('nexoraOAuthFlow');
       message(`Connexion ${provider==='google'?'Google':'Apple'} indisponible. Activez d'abord ce fournisseur dans Supabase Authentication → Providers.`);
     }
   }
