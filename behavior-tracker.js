@@ -1,4 +1,15 @@
-(function(){
+(() => {
+  // Keep the existing behavior tracker and bootstrap the multilingual UI engine.
+  (function loadI18n(){
+    if(window.NexoraI18n || document.querySelector('script[data-nexora-i18n]')) return;
+    const s=document.createElement('script');
+    s.src='/i18n.js?v=20260904-1';
+    s.async=true;
+    s.dataset.nexoraI18n='1';
+    s.onerror=()=>console.warn('[Nexora] i18n unavailable.');
+    document.head.appendChild(s);
+  })();
+
   const I=()=>window.NexoraIntent;
   const text=el=>(el?.textContent||'').trim();
   const topicsFrom=(s)=>I?.normalize?.(s||'').split(/[^a-z0-9]+/).filter(x=>x.length>2).slice(0,10)||[];
