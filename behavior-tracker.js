@@ -4,9 +4,10 @@
     const s=document.createElement('script');s.src=src;s.async=true;s.dataset[attr]='1';
     s.onerror=()=>console.warn(`[Nexora] ${attr} unavailable.`);document.head.appendChild(s);
   }
-  loadScript('/i18n.js?v=20260904-2','nexora-i18n');
-  loadScript('/i18n-settings.js?v=20260904-2','nexora-i18n-settings');
-  loadScript('/i18n-extra.js?v=20260904-2','nexora-i18n-extra');
+  loadScript('/i18n.js?v=20260904-3','nexora-i18n');
+  loadScript('/i18n-settings.js?v=20260904-3','nexora-i18n-settings');
+  loadScript('/i18n-extra.js?v=20260904-3','nexora-i18n-extra');
+  loadScript('/i18n-force.js?v=20260904-1','nexora-i18n-force');
 
   const I=()=>window.NexoraIntent;
   const text=el=>(el?.textContent||'').trim();
